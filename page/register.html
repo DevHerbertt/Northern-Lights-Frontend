@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro - Northern Lights</title>
+    <link rel="stylesheet" href="../css/register.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Background Animation -->
+    <div class="background-animation">
+        <div class="floating-shape shape-1"></div>
+        <div class="floating-shape shape-2"></div>
+        <div class="floating-shape shape-3"></div>
+    </div>
+
+    <div class="register-container">
+        <!-- Header -->
+        <header class="register-header">
+            <button id="back-btn" class="back-btn">
+                <i class="fas fa-arrow-left"></i>
+                Voltar para login
+            </button>
+        </header>
+
+        <!-- Register Card -->
+        <div class="register-card">
+            <div class="card-header">
+                <div class="logo-container">
+                    <i class="fas fa-sparkle sparkle-left"></i>
+                    <h1 class="logo-text">Registro</h1>
+                    <i class="fas fa-sparkle sparkle-right"></i>
+                </div>
+                <p class="card-subtitle">Crie sua conta para começar sua jornada</p>
+            </div>
+
+            <!-- Success Message -->
+            <div id="success-message" class="message success-message" style="display: none;">
+                <i class="fas fa-check-circle"></i>
+                <span id="success-text"></span>
+            </div>
+
+            <!-- Error Message -->
+            <div id="error-message" class="message error-message" style="display: none;">
+                <i class="fas fa-exclamation-circle"></i>
+                <span id="error-text"></span>
+            </div>
+
+            <!-- Register Form -->
+            <form id="register-form" class="register-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="userName" class="form-label">Nome Completo *</label>
+                        <div class="input-container">
+                            <input
+                                type="text"
+                                id="userName"
+                                name="userName"
+                                class="form-input"
+                                placeholder="Seu nome completo"
+                                required
+                            >
+                            <div class="input-icon">
+                                <i class="fas fa-user"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="age" class="form-label">Idade *</label>
+                        <div class="input-container">
+                            <input
+                                type="number"
+                                id="age"
+                                name="age"
+                                class="form-input"
+                                placeholder="Sua idade"
+                                min="10"
+                                max="100"
+                                required
+                            >
+                            <div class="input-icon">
+                                <i class="fas fa-calendar-alt"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="email" class="form-label">Email *</label>
+                    <div class="input-container">
+                        <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            class="form-input"
+                            placeholder="seu@email.com"
+                            required
+                        >
+                        <div class="input-icon">
+                            @
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="password" class="form-label">Senha *</label>
+                        <div class="input-container">
+                            <input
+                                type="password"
+                                id="password"
+                                name="password"
+                                class="form-input"
+                                placeholder="Sua senha"
+                                required
+                            >
+                            <button type="button" id="toggle-password" class="password-toggle">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="confirmPassword" class="form-label">Confirmar Senha *</label>
+                        <div class="input-container">
+                            <input
+                                type="password"
+                                id="confirmPassword"
+                                name="confirmPassword"
+                                class="form-input"
+                                placeholder="Confirme sua senha"
+                                required
+                            >
+                            <button type="button" id="toggle-confirm-password" class="password-toggle">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="levelEnglish" class="form-label">Nível de Inglês *</label>
+                        <div class="input-container">
+                            <select id="levelEnglish" name="levelEnglish" class="form-input form-select" required>
+                                <option value="">Selecione seu nível</option>
+                                <option value="A1">A1 - Iniciante</option>
+                                <option value="A2">A2 - Básico</option>
+                                <option value="B1">B1 - Intermediário</option>
+                                <option value="B2">B2 - Intermediário Superior</option>
+                                <option value="C1">C1 - Avançado</option>
+                                <option value="C2">C2 - Proficiente</option>
+                            </select>
+                            <div class="input-icon">
+                                <i class="fas fa-language"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Terms Agreement -->
+                <div class="terms-group">
+                    <label class="checkbox-option">
+                        <input type="checkbox" id="agreeTerms" name="agreeTerms" required>
+                        <span class="checkbox-custom"></span>
+                        <span class="checkbox-text">
+                            Concordo com os <a href="#" class="terms-link">Termos de Serviço</a> e 
+                            <a href="#" class="terms-link">Política de Privacidade</a>
+                        </span>
+                    </label>
+                </div>
+
+                <button type="submit" id="register-btn" class="register-button">
+                    <i class="fas fa-rocket button-icon"></i>
+                    <span id="button-text">Criar Minha Conta</span>
+                    <i class="fas fa-sparkle button-sparkle"></i>
+                </button>
+            </form>
+
+            <!-- Login Link -->
+            <div class="login-section">
+                <p class="login-text">
+                    Já tem uma conta?
+                    <a href="login.html" class="login-link">Fazer login</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay" style="display: none;">
+        <div class="loading-spinner">
+            <i class="fas fa-spinner fa-spin"></i>
+            <span>Criando conta...</span>
+        </div>
+    </div>
+
+    <script src="../js/auth-service.js"></script>
+    <script src="../js/register.js"></script>
+</body>
+</html>

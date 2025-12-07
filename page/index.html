@@ -1,0 +1,1023 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Northern Lights - Sistema Educacional</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Reset e estilos base */
+        :root {
+            --primary: #3b82f6;
+            --primary-dark: #1e40af;
+            --secondary: #8b5cf6;
+            --accent: #06b6d4;
+            --background: #0f172a;
+            --foreground: #f8fafc;
+            --muted: #94a3b8;
+            --card-bg: rgba(30, 41, 59, 0.7);
+            --border: #334155;
+            --success: #10b981;
+            --gradient-primary: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            --gradient-secondary: linear-gradient(135deg, #06b6d4, #3b82f6);
+            --gradient-accent: linear-gradient(135deg, #8b5cf6, #ec4899);
+            --gradient-dark: linear-gradient(135deg, #000428, #004e92);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--background);
+            color: var(--foreground);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Animações */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes aurora {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(-100%); }
+            to { transform: translateX(0); }
+        }
+
+        /* Componentes reutilizáveis */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+            font-size: 16px;
+        }
+
+        .btn-primary {
+            background: var(--gradient-primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(59, 130, 246, 0.3);
+        }
+
+        .btn-secondary {
+            background: var(--gradient-secondary);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(6, 182, 212, 0.3);
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+
+        .aurora-text {
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6, #06b6d4, #3b82f6);
+            background-size: 300% 100%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: aurora 5s ease infinite;
+        }
+
+        .section-title {
+            font-size: 3rem;
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        /* Intro Animation */
+        #intro-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--gradient-dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            cursor: pointer;
+        }
+
+        .intro-content {
+            text-align: center;
+            animation: fadeIn 1s ease;
+        }
+
+        .intro-title {
+            font-size: 4rem;
+            font-weight: 900;
+            margin-bottom: 2rem;
+            text-shadow: 0 0 20px rgba(59, 130, 246, 0.8);
+            font-family: monospace;
+        }
+
+        .intro-subtitle {
+            font-size: 1.2rem;
+            opacity: 0.8;
+            margin-bottom: 1rem;
+        }
+
+        .intro-bounce {
+            font-size: 1.5rem;
+            animation: bounce 2s infinite;
+        }
+
+        .sound-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .sound-toggle:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: white;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        /* Header */
+        header {
+            position: relative;
+            padding: 20px 0;
+        }
+
+        .auth-buttons {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 15px;
+            z-index: 10;
+        }
+
+        /* Hero Section */
+        .hero {
+            position: relative;
+            margin: 40px 0 80px;
+        }
+
+        .hero-image {
+            width: 100%;
+            height: 500px;
+            object-fit: cover;
+            border-radius: 20px;
+        }
+
+        .hero-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 60%;
+            background: linear-gradient(to top, var(--background), transparent);
+            border-radius: 0 0 20px 20px;
+        }
+
+        .hero-content {
+            position: absolute;
+            bottom: 60px;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            padding: 0 20px;
+        }
+
+        .hero-title {
+            font-size: 4.5rem;
+            font-weight: 900;
+            margin-bottom: 20px;
+        }
+
+        .hero-subtitle {
+            font-size: 1.8rem;
+            opacity: 0.9;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero-description {
+            max-width: 900px;
+            margin: 40px auto 0;
+            font-size: 1.2rem;
+            line-height: 1.8;
+            opacity: 0.8;
+        }
+
+        /* Features Section */
+        .features {
+            margin: 80px 0;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .feature-card {
+            padding: 40px 30px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .feature-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 25px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: white;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .feature-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .feature-description {
+            opacity: 0.8;
+        }
+
+        /* Teachers Section */
+        .teachers {
+            margin: 80px 0;
+        }
+
+        .teachers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .teacher-card {
+            padding: 30px;
+            display: flex;
+            gap: 25px;
+            align-items: center;
+        }
+
+        .teacher-image {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            flex-shrink: 0;
+            border: 3px solid var(--accent);
+        }
+
+        .teacher-info {
+            flex: 1;
+        }
+
+        .teacher-name {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .teacher-level {
+            color: var(--accent);
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .teacher-description {
+            opacity: 0.8;
+            margin-bottom: 15px;
+        }
+
+        .teacher-social {
+            display: flex;
+            gap: 15px;
+        }
+
+        .social-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .social-icon:hover {
+            background: var(--primary);
+            transform: translateY(-3px);
+        }
+
+        /* Church Section */
+        .church {
+            margin: 80px 0;
+        }
+
+        .church-card {
+            padding: 40px;
+        }
+
+        .church-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .church-title {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 10px;
+        }
+
+        .church-subtitle {
+            font-size: 1.2rem;
+            opacity: 0.8;
+        }
+
+        .church-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+        }
+
+        .church-map {
+            border-radius: 12px;
+            overflow: hidden;
+            height: 300px;
+        }
+
+        .church-links {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .church-link {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            border-radius: 12px;
+            text-decoration: none;
+            color: var(--foreground);
+            transition: all 0.3s ease;
+        }
+
+        .church-link:hover {
+            transform: translateY(-5px);
+        }
+
+        .church-link i {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .church-link span {
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .church-address {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            margin-top: 15px;
+        }
+
+        .church-address i {
+            color: #ef4444;
+            margin-right: 10px;
+        }
+
+        .church-footer {
+            text-align: center;
+            padding: 20px;
+            margin-top: 30px;
+            border-radius: 12px;
+            background: rgba(6, 182, 212, 0.1);
+        }
+
+        .church-footer i {
+            color: #ef4444;
+            margin-right: 5px;
+        }
+
+        /* Creator Section */
+        .creator {
+            margin: 60px 0;
+            text-align: center;
+        }
+
+        .creator-toggle {
+            background: none;
+            border: none;
+            color: var(--muted);
+            font-size: 1rem;
+            cursor: pointer;
+            transition: color 0.3s ease;
+            margin-bottom: 20px;
+        }
+
+        .creator-toggle:hover {
+            color: var(--foreground);
+        }
+
+        .creator-card {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 30px;
+            text-align: center;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .creator-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .creator-role {
+            opacity: 0.8;
+            margin-bottom: 20px;
+        }
+
+        .creator-social {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .creator-social a {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-decoration: none;
+            transition: transform 0.3s ease;
+        }
+
+        .creator-social a:hover {
+            transform: scale(1.1);
+        }
+
+        .creator-note {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        /* Footer */
+        footer {
+            padding: 40px 0;
+            border-top: 1px solid var(--border);
+            text-align: center;
+        }
+
+        .footer-logo {
+            margin-bottom: 15px;
+            position: relative;
+            display: inline-block;
+        }
+
+        .footer-logo i {
+            font-size: 2rem;
+            color: var(--primary);
+        }
+
+        .footer-logo span {
+            position: absolute;
+            bottom: -5px;
+            right: -10px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .footer-text {
+            opacity: 0.8;
+        }
+
+        /* Responsividade */
+        @media (max-width: 1024px) {
+            .hero-title {
+                font-size: 3.5rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.5rem;
+            }
+            
+            .section-title {
+                font-size: 2.5rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.8rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.3rem;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+            
+            .teacher-card {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .church-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .intro-title {
+                font-size: 2.5rem;
+            }
+            
+            .auth-buttons {
+                position: static;
+                justify-content: center;
+                margin-bottom: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-title {
+                font-size: 2.2rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.1rem;
+            }
+            
+            .section-title {
+                font-size: 1.8rem;
+            }
+            
+            .features-grid,
+            .teachers-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .church-links {
+                grid-template-columns: 1fr;
+            }
+            
+            .intro-title {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Intro Animation -->
+    <div id="intro-animation">
+        <button class="sound-toggle" id="sound-toggle">
+            <i class="fas fa-volume-up"></i>
+        </button>
+        
+        <div class="intro-content">
+            <h1 class="intro-title">IT'S THE FUTURE</h1>
+            <p class="intro-subtitle">Click anywhere to continue</p>
+            <div class="intro-bounce">▼</div>
+        </div>
+        
+        <div class="particles" id="particles"></div>
+        
+        <audio id="intro-audio" loop>
+            <source src="/sounds/future-intro.mp3" type="audio/mp3">
+        </audio>
+    </div>
+
+    <!-- Conteúdo Principal -->
+    <div id="main-content" style="display: none;">
+        <div class="container">
+            <!-- Header com botões de autenticação -->
+            <header>
+                <div class="auth-buttons">
+                    <button class="btn btn-primary" id="login-btn">
+                        <i class="fas fa-sign-in-alt"></i> Login
+                    </button>
+                    <button class="btn btn-secondary" id="register-btn">
+                        <i class="fas fa-user-plus"></i> Register
+                    </button>
+                </div>
+            </header>
+
+            <!-- Hero Section -->
+            <section class="hero">
+                <img src="https://images.unsplash.com/photo-1519681393784-d120267933ba?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Northern Lights" class="hero-image">
+                <div class="hero-overlay"></div>
+                <div class="hero-content">
+                    <h1 class="hero-title aurora-text">NORTHERN LIGHTS</h1>
+                    <p class="hero-subtitle">Northern Lights: where the Lord's light illuminates your journey in English and throughout your life.</p>
+                    <p class="hero-description">
+                        At Northern Lights, learning English goes far beyond memorizing words — it's a transformative journey guided by excellence in teaching and grounded in the truth of the Gospel.
+                        Here, each lesson is carefully designed to provide solid, dynamic, and accessible learning for all levels. But what truly sets us apart is our purpose: to teach with Christian values, where the light of the Lord guides not only the mind but also the heart.
+                    </p>
+                </div>
+            </section>
+
+            <!-- Features Section -->
+            <section class="features">
+                <h2 class="section-title aurora-text">Illuminate Your Learning</h2>
+                
+                <div class="features-grid">
+                    <div class="glass-card feature-card">
+                        <div class="feature-icon" style="background: var(--gradient-secondary);">
+                            <i class="fas fa-book-open"></i>
+                        </div>
+                        <h3 class="feature-title">Interactive Questions</h3>
+                        <p class="feature-description">
+                            Engage with multimedia questions that support text, images, and complex analysis tasks
+                        </p>
+                    </div>
+                    
+                    <div class="glass-card feature-card">
+                        <div class="feature-icon" style="background: var(--gradient-accent);">
+                            <i class="fas fa-sparkles"></i>
+                        </div>
+                        <h3 class="feature-title">Performance Analytics</h3>
+                        <p class="feature-description">
+                            Track progress with beautiful visualizations and personalized insights
+                        </p>
+                    </div>
+                    
+                    <div class="glass-card feature-card">
+                        <div class="feature-icon" style="background: var(--gradient-primary);">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <h3 class="feature-title">Collaborative Learning</h3>
+                        <p class="feature-description">
+                            Connect students and teachers in a seamless educational ecosystem
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Teachers Section -->
+            <section class="teachers">
+                <h2 class="section-title aurora-text">Our Dedicated Teachers</h2>
+                <p class="hero-subtitle" style="text-align: center; margin-bottom: 40px;">
+                    Meet the passionate educators who will guide you on your language learning journey
+                </p>
+                
+                <div class="teachers-grid">
+                    <div class="glass-card teacher-card">
+                        <img src="https://images.unsplash.com/photo-1494790108755-2616b612b786?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80" alt="Evelyn Lima" class="teacher-image">
+                        <div class="teacher-info">
+                            <h3 class="teacher-name">Evelyn Lima</h3>
+                            <p class="teacher-level">English Teacher for Levels A1 to B1</p>
+                            <p class="teacher-description">
+                                Evelyn is a passionate English teacher dedicated to helping beginners and intermediate students build a strong foundation and confidence in the language.
+                            </p>
+                            <div class="teacher-social">
+                                <a href="#" class="social-icon">
+                                    <i class="fab fa-facebook-f"></i>
+                                </a>
+                                <a href="#" class="social-icon">
+                                    <i class="fab fa-instagram"></i>
+                                </a>
+                                <a href="#" class="social-icon">
+                                    <i class="fab fa-linkedin-in"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="glass-card teacher-card">
+                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80" alt="Vinícius Martinson" class="teacher-image">
+                        <div class="teacher-info">
+                            <h3 class="teacher-name">Vinícius Martinson</h3>
+                            <p class="teacher-level">English Teacher for Levels B2 to C2</p>
+                            <p class="teacher-description">
+                                Vinícius is a dedicated English teacher who brings passion and expertise to help advanced students master the language and reach their highest potential.
+                            </p>
+                            <div class="teacher-social">
+                                <a href="#" class="social-icon">
+                                    <i class="fab fa-facebook-f"></i>
+                                </a>
+                                <a href="#" class="social-icon">
+                                    <i class="fab fa-instagram"></i>
+                                </a>
+                                <a href="#" class="social-icon">
+                                    <i class="fab fa-linkedin-in"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Church Section -->
+            <section class="church">
+                <div class="glass-card church-card">
+                    <div class="church-header">
+                        <h2 class="church-title aurora-text">IGREJA VILA AURORA</h2>
+                        <p class="church-subtitle">Assembleia de Deus - Ministério do Belém</p>
+                    </div>
+                    
+                    <div class="church-content">
+                        <div class="church-map">
+                            <iframe 
+                                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3658.122569625298!2d-46.6998238246873!3d-23.523378978828!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94cef87be3d3f4a5%3A0x4b3d3f5d5d5d5d5d!2sRua%20In%C3%A1cio%20Mammana%2C%20272%20-%20Vila%20Aurora%2C%20S%C3%A3o%20Paulo%20-%20SP%2C%2002550-020!5e0!3m2!1spt-BR!2sbr!4v1710270000000!5m2!1spt-BR!2sbr" 
+                                width="100%" 
+                                height="100%" 
+                                style="border:0;" 
+                                allowfullscreen="" 
+                                loading="lazy" 
+                                referrerpolicy="no-referrer-when-downgrade">
+                            </iframe>
+                        </div>
+                        
+                        <div>
+                            <h3 style="text-align: center; margin-bottom: 20px; font-size: 1.8rem;">Conecte-se conosco</h3>
+                            <p style="text-align: center; margin-bottom: 30px; opacity: 0.8;">
+                                Venha nos visitar e fazer parte da nossa família em Cristo
+                            </p>
+                            
+                            <div class="church-links">
+                                <a href="https://igrejavilaaurora.github.io/SiteVilaAurora/" target="_blank" class="church-link" style="background: rgba(59, 130, 246, 0.1);">
+                                    <i class="fas fa-globe" style="color: #3b82f6;"></i>
+                                    <span>Site Oficial</span>
+                                </a>
+                                
+                                <a href="https://www.instagram.com/advilaaurora4/" target="_blank" class="church-link" style="background: rgba(236, 72, 153, 0.1);">
+                                    <i class="fab fa-instagram" style="color: #ec4899;"></i>
+                                    <span>Instagram</span>
+                                </a>
+                                
+                                <a href="https://www.facebook.com/people/Vila-Aurora/61576620937416/" target="_blank" class="church-link" style="background: rgba(59, 130, 246, 0.1);">
+                                    <i class="fab fa-facebook-f" style="color: #3b82f6;"></i>
+                                    <span>Facebook</span>
+                                </a>
+                                
+                                <a href="https://www.youtube.com/@AssembleiadeDeusVilaAurora" target="_blank" class="church-link" style="background: rgba(239, 68, 68, 0.1);">
+                                    <i class="fab fa-youtube" style="color: #ef4444;"></i>
+                                    <span>YouTube</span>
+                                </a>
+                            </div>
+                            
+                            <div class="church-address">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span>272 Rua Inácio Mammana, Vila Aurora, SP</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="church-footer">
+                        <p>
+                            <i class="fas fa-heart"></i>
+                            Servindo a Cristo e à comunidade desde 1940
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Creator Section -->
+            <section class="creator">
+                <button class="creator-toggle" id="creator-toggle">
+                    Sobre o desenvolvedor
+                </button>
+                
+                <div id="creator-info" style="display: none;">
+                    <div class="glass-card creator-card">
+                        <h3 class="creator-name">Herbert Matheus Oliveira Santos</h3>
+                        <p class="creator-role">Desenvolvedor Full-Stack</p>
+                        
+                        <div class="creator-social">
+                            <a href="https://www.instagram.com/herbertt.mat/" target="_blank" style="background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);">
+                                <i class="fab fa-instagram"></i>
+                            </a>
+                            <a href="https://www.linkedin.com/in/herbertmatheus/" target="_blank" style="background: #0a66c2;">
+                                <i class="fab fa-linkedin-in"></i>
+                            </a>
+                        </div>
+                        
+                        <p class="creator-note">
+                            Desenvolvido com ❤️ para a Igreja Vila Aurora
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Footer -->
+            <footer>
+                <div class="footer-logo">
+                    <i class="fas fa-signature"></i>
+                    <span>TH</span>
+                </div>
+                <p class="footer-text">
+                    Powered by the magic of the Northern Lights • Aurora Educational System 2024
+                </p>
+            </footer>
+        </div>
+    </div>
+
+    <script>
+        // Elementos DOM
+        const introAnimation = document.getElementById('intro-animation');
+        const mainContent = document.getElementById('main-content');
+        const soundToggle = document.getElementById('sound-toggle');
+        const introAudio = document.getElementById('intro-audio');
+        const particlesContainer = document.getElementById('particles');
+        const loginBtn = document.getElementById('login-btn');
+        const registerBtn = document.getElementById('register-btn');
+        const creatorToggle = document.getElementById('creator-toggle');
+        const creatorInfo = document.getElementById('creator-info');
+
+        // Estado da aplicação
+        let muted = false;
+        let clicked = false;
+
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', function() {
+            // Criar partículas
+            createParticles();
+            
+            // Configurar áudio
+            introAudio.volume = 0.3;
+            
+            // Tentar reproduzir áudio automaticamente
+            tryPlayAudio();
+            
+            // Configurar temporizador para finalização automática
+            setTimeout(() => {
+                if (!clicked) {
+                    finishIntro();
+                }
+            }, 2500);
+        });
+
+        // Criar partículas
+        function createParticles() {
+            for (let i = 0; i < 20; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                particle.style.left = `${Math.random() * 100}%`;
+                particle.style.top = `${Math.random() * 100}%`;
+                particle.style.animationDelay = `${i * 0.1}s`;
+                particle.style.opacity = Math.random() * 0.5 + 0.3;
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        // Tentar reproduzir áudio
+        function tryPlayAudio() {
+            if (!muted) {
+                introAudio.play()
+                    .then(() => console.log("Áudio reproduzido com sucesso"))
+                    .catch(error => console.log("Autoplay bloqueado:", error));
+            }
+        }
+
+        // Finalizar intro
+        function finishIntro() {
+            clicked = true;
+            
+            // Se o áudio não estava tocando, tentar tocar agora
+            if (!muted && introAudio.paused) {
+                introAudio.play().catch(error => console.log("Erro ao reproduzir áudio:", error));
+            }
+            
+            // Esconder intro e mostrar conteúdo principal
+            introAnimation.style.display = 'none';
+            mainContent.style.display = 'block';
+        }
+
+        // Event Listeners
+        introAnimation.addEventListener('click', finishIntro);
+
+        soundToggle.addEventListener('click', function(e) {
+            e.stopPropagation();
+            muted = !muted;
+            
+            if (muted) {
+                introAudio.volume = 0;
+                soundToggle.innerHTML = '<i class="fas fa-volume-mute"></i>';
+            } else {
+                introAudio.volume = 0.3;
+                soundToggle.innerHTML = '<i class="fas fa-volume-up"></i>';
+                
+                // Se o áudio não estava tocando, tentar tocar agora
+                if (introAudio.paused) {
+                    introAudio.play().catch(error => console.log("Erro ao reproduzir áudio:", error));
+                }
+            }
+        });
+
+        loginBtn.addEventListener('click', function() {
+            alert('Redirecionando para a página de login...');
+            // Em uma aplicação real: window.location.href = "/login";
+        });
+
+        registerBtn.addEventListener('click', function() {
+            alert('Redirecionando para a página de registro...');
+            // Em uma aplicação real: window.location.href = "/register";
+        });
+
+        creatorToggle.addEventListener('click', function() {
+            if (creatorInfo.style.display === 'none') {
+                creatorInfo.style.display = 'block';
+                creatorToggle.textContent = 'Ocultar informações';
+            } else {
+                creatorInfo.style.display = 'none';
+                creatorToggle.textContent = 'Sobre o desenvolvedor';
+            }
+        });
+    </script>
+</body>
+</html>

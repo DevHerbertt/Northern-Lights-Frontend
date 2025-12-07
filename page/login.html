@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Northern Lights</title>
+    <link rel="stylesheet" href="../css/login.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Background Animation -->
+    <div class="background-animation">
+        <div class="floating-shape shape-1"></div>
+        <div class="floating-shape shape-2"></div>
+        <div class="floating-shape shape-3"></div>
+    </div>
+
+    <div class="login-container">
+        <!-- Header -->
+        <header class="login-header">
+            <button id="back-btn" class="back-btn">
+                <i class="fas fa-arrow-left"></i>
+                Voltar para a página inicial
+            </button>
+        </header>
+
+        <!-- Login Card -->
+        <div class="login-card">
+            <div class="card-header">
+                <div class="logo-container">
+                    <i class="fas fa-sparkle sparkle-left"></i>
+                    <h1 class="logo-text">Login</h1>
+                    <i class="fas fa-sparkle sparkle-right"></i>
+                </div>
+                <p class="card-subtitle">Entre na sua conta para acessar o sistema</p>
+            </div>
+
+            <!-- Success Message -->
+            <div id="success-message" class="message success-message" style="display: none;">
+                <i class="fas fa-check-circle"></i>
+                <span id="success-text"></span>
+            </div>
+
+            <!-- Error Message -->
+            <div id="error-message" class="message error-message" style="display: none;">
+                <i class="fas fa-exclamation-circle"></i>
+                <span id="error-text"></span>
+            </div>
+
+            <!-- Login Form -->
+            <form id="login-form" class="login-form">
+                <div class="form-group">
+                    <label for="email" class="form-label">Email</label>
+                    <div class="input-container">
+                        <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            class="form-input"
+                            placeholder="seu@email.com"
+                            required
+                        >
+                        <div class="input-icon">
+                            @
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="password" class="form-label">Senha</label>
+                    <div class="input-container">
+                        <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            class="form-input"
+                            placeholder="Sua senha"
+                            required
+                        >
+                        <button type="button" id="toggle-password" class="password-toggle">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <button type="submit" id="login-btn" class="login-button">
+                    <i class="fas fa-sparkle button-sparkle"></i>
+                    <span id="button-text">Acessar Minha Conta</span>
+                    <i class="fas fa-sparkle button-sparkle"></i>
+                </button>
+            </form>
+
+            <!-- Register Link -->
+            <div class="register-section">
+                <p class="register-text">
+                    Não tem uma conta?
+                    <a href="register.html" class="register-link">Criar conta agora</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay" style="display: none;">
+        <div class="loading-spinner">
+            <i class="fas fa-spinner fa-spin"></i>
+            <span>Entrando...</span>
+        </div>
+    </div>
+
+    <script src="../js/auth-service.js"></script>
+    <script src="../js/login-manager.js"></script>
+</body>
+</html>
