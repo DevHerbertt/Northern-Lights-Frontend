@@ -427,3 +427,5 @@ window.closeRecordedClassModal = closeRecordedClassModal;
 
 })();
 
+
+

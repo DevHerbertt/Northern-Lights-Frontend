@@ -3,8 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Northern Lights - Sistema Educacional</title>
+    <title>Northern Lights - Aprenda Inglês com Excelência</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         /* Reset e estilos base */
         :root {
@@ -12,27 +15,31 @@
             --primary-dark: #1e40af;
             --secondary: #8b5cf6;
             --accent: #06b6d4;
-            --background: #0f172a;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --background: #0a0e27;
+            --background-light: #0f172a;
             --foreground: #f8fafc;
             --muted: #94a3b8;
-            --card-bg: rgba(30, 41, 59, 0.7);
+            --card-bg: rgba(30, 41, 59, 0.8);
             --border: #334155;
-            --success: #10b981;
-            --gradient-primary: linear-gradient(135deg, #3b82f6, #8b5cf6);
-            --gradient-secondary: linear-gradient(135deg, #06b6d4, #3b82f6);
-            --gradient-accent: linear-gradient(135deg, #8b5cf6, #ec4899);
-            --gradient-dark: linear-gradient(135deg, #000428, #004e92);
+            --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-secondary: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --gradient-accent: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --gradient-english: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+            --gradient-dark: linear-gradient(135deg, #000428 0%, #004e92 100%);
+            --gradient-aurora: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
         body {
-            background-color: var(--background);
+            font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--background);
             color: var(--foreground);
             line-height: 1.6;
             overflow-x: hidden;
@@ -46,13 +53,13 @@
 
         /* Animações */
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
+            from { opacity: 0; transform: translateY(30px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
         @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
         }
 
         @keyframes aurora {
@@ -62,21 +69,31 @@
         }
 
         @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.7; }
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.05); }
         }
 
-        @keyframes slideIn {
-            from { transform: translateX(-100%); }
-            to { transform: translateX(0); }
+        @keyframes slideInLeft {
+            from { transform: translateX(-100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes slideInRight {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -1000px 0; }
+            100% { background-position: 1000px 0; }
         }
 
         /* Componentes reutilizáveis */
         .btn {
             display: inline-flex;
             align-items: center;
-            gap: 8px;
-            padding: 12px 24px;
+            gap: 10px;
+            padding: 14px 32px;
             border-radius: 50px;
             font-weight: 600;
             text-decoration: none;
@@ -84,51 +101,100 @@
             cursor: pointer;
             border: none;
             font-size: 16px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
         }
 
         .btn-primary {
             background: var(--gradient-primary);
             color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
         }
 
         .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(59, 130, 246, 0.3);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
         }
 
         .btn-secondary {
-            background: var(--gradient-secondary);
+            background: var(--gradient-accent);
             color: white;
+            box-shadow: 0 4px 15px rgba(79, 172, 254, 0.4);
         }
 
         .btn-secondary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(6, 182, 212, 0.3);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(79, 172, 254, 0.6);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-outline:hover {
+            background: var(--primary);
+            color: white;
         }
 
         .glass-card {
             background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
-            border-radius: 16px;
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
             border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
             overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+            border-color: rgba(255, 255, 255, 0.2);
         }
 
         .aurora-text {
-            background: linear-gradient(90deg, #3b82f6, #8b5cf6, #06b6d4, #3b82f6);
+            background: linear-gradient(90deg, #667eea, #764ba2, #f093fb, #f5576c, #667eea);
             background-size: 300% 100%;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            animation: aurora 5s ease infinite;
+            animation: aurora 8s ease infinite;
+            font-weight: 800;
         }
 
         .section-title {
-            font-size: 3rem;
-            font-weight: 800;
+            font-size: 3.5rem;
+            font-weight: 900;
             text-align: center;
-            margin-bottom: 2rem;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            font-size: 1.3rem;
+            color: var(--muted);
+            margin-bottom: 3rem;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         /* Intro Animation */
@@ -142,7 +208,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            z-index: 1000;
+            z-index: 10000;
             cursor: pointer;
         }
 
@@ -152,223 +218,297 @@
         }
 
         .intro-title {
-            font-size: 4rem;
+            font-size: 5rem;
             font-weight: 900;
             margin-bottom: 2rem;
-            text-shadow: 0 0 20px rgba(59, 130, 246, 0.8);
-            font-family: monospace;
+            background: var(--gradient-aurora);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 30px rgba(102, 126, 234, 0.5);
         }
 
         .intro-subtitle {
-            font-size: 1.2rem;
-            opacity: 0.8;
-            margin-bottom: 1rem;
+            font-size: 1.5rem;
+            opacity: 0.9;
+            margin-bottom: 1.5rem;
+            color: var(--muted);
         }
 
         .intro-bounce {
-            font-size: 1.5rem;
-            animation: bounce 2s infinite;
-        }
-
-        .sound-toggle {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: rgba(255, 255, 255, 0.1);
-            border: none;
-            color: white;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .sound-toggle:hover {
-            background: rgba(255, 255, 255, 0.2);
-        }
-
-        .particles {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-        }
-
-        .particle {
-            position: absolute;
-            width: 4px;
-            height: 4px;
-            background: white;
-            border-radius: 50%;
-            animation: pulse 2s infinite;
+            font-size: 2rem;
+            animation: float 2s ease-in-out infinite;
+            color: var(--accent);
         }
 
         /* Header */
         header {
             position: relative;
-            padding: 20px 0;
+            padding: 30px 0;
+            z-index: 100;
         }
 
         .auth-buttons {
-            position: absolute;
-            top: 20px;
-            right: 20px;
             display: flex;
             gap: 15px;
-            z-index: 10;
+            justify-content: flex-end;
+            flex-wrap: wrap;
         }
 
         /* Hero Section */
         .hero {
             position: relative;
-            margin: 40px 0 80px;
+            margin: 60px 0 100px;
+            min-height: 600px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+            border-radius: 30px;
+            padding: 60px 40px;
+            overflow: hidden;
         }
 
-        .hero-image {
-            width: 100%;
-            height: 500px;
-            object-fit: cover;
-            border-radius: 20px;
-        }
-
-        .hero-overlay {
+        .hero::before {
+            content: '';
             position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 60%;
-            background: linear-gradient(to top, var(--background), transparent);
-            border-radius: 0 0 20px 20px;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(102, 126, 234, 0.1) 0%, transparent 70%);
+            animation: pulse 4s ease-in-out infinite;
         }
 
         .hero-content {
-            position: absolute;
-            bottom: 60px;
-            left: 0;
-            width: 100%;
+            position: relative;
+            z-index: 2;
             text-align: center;
-            padding: 0 20px;
+            max-width: 900px;
+            animation: fadeIn 1s ease;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            padding: 8px 20px;
+            background: var(--gradient-english);
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: var(--background);
+            animation: slideInLeft 0.8s ease;
         }
 
         .hero-title {
-            font-size: 4.5rem;
+            font-size: 5rem;
             font-weight: 900;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
+            line-height: 1.1;
+            animation: fadeIn 1s ease 0.2s both;
         }
 
         .hero-subtitle {
-            font-size: 1.8rem;
-            opacity: 0.9;
-            max-width: 800px;
-            margin: 0 auto;
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 30px;
+            color: var(--muted);
+            animation: fadeIn 1s ease 0.4s both;
         }
 
         .hero-description {
-            max-width: 900px;
-            margin: 40px auto 0;
             font-size: 1.2rem;
             line-height: 1.8;
-            opacity: 0.8;
+            color: var(--muted);
+            margin-bottom: 40px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            animation: fadeIn 1s ease 0.6s both;
+        }
+
+        .hero-cta {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+            animation: fadeIn 1s ease 0.8s both;
         }
 
         /* Features Section */
         .features {
-            margin: 80px 0;
+            margin: 100px 0;
         }
 
         .features-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
             gap: 30px;
-            margin-top: 50px;
+            margin-top: 60px;
         }
 
         .feature-card {
-            padding: 40px 30px;
+            padding: 50px 35px;
             text-align: center;
-            transition: transform 0.3s ease;
+            transition: all 0.4s ease;
+            position: relative;
         }
 
-        .feature-card:hover {
-            transform: translateY(-10px);
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--gradient-primary);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            border-radius: 24px;
+        }
+
+        .feature-card:hover::before {
+            opacity: 0.1;
         }
 
         .feature-icon {
-            width: 80px;
-            height: 80px;
-            margin: 0 auto 25px;
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 30px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 2rem;
+            font-size: 2.5rem;
             color: white;
-            animation: float 3s ease-in-out infinite;
+            position: relative;
+            z-index: 1;
+            animation: float 4s ease-in-out infinite;
+        }
+
+        .feature-icon:nth-child(1) {
+            animation-delay: 0s;
+        }
+
+        .feature-icon:nth-child(2) {
+            animation-delay: 0.5s;
+        }
+
+        .feature-icon:nth-child(3) {
+            animation-delay: 1s;
         }
 
         .feature-title {
-            font-size: 1.5rem;
+            font-size: 1.8rem;
             font-weight: 700;
             margin-bottom: 15px;
+            position: relative;
+            z-index: 1;
         }
 
         .feature-description {
-            opacity: 0.8;
+            opacity: 0.85;
+            font-size: 1.05rem;
+            line-height: 1.7;
+            position: relative;
+            z-index: 1;
         }
 
         /* Teachers Section */
         .teachers {
-            margin: 80px 0;
+            margin: 100px 0;
         }
 
         .teachers-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-            gap: 30px;
-            margin-top: 50px;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 40px;
+            margin-top: 60px;
         }
 
         .teacher-card {
-            padding: 30px;
+            padding: 40px;
             display: flex;
-            gap: 25px;
+            gap: 30px;
             align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .teacher-card::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(102, 126, 234, 0.1) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .teacher-card:hover::after {
+            opacity: 1;
+        }
+
+        .teacher-image-wrapper {
+            position: relative;
+            flex-shrink: 0;
         }
 
         .teacher-image {
-            width: 150px;
-            height: 150px;
+            width: 180px;
+            height: 180px;
             border-radius: 50%;
             object-fit: cover;
-            flex-shrink: 0;
-            border: 3px solid var(--accent);
+            border: 4px solid transparent;
+            background: var(--gradient-primary);
+            padding: 4px;
+            box-shadow: 0 8px 30px rgba(102, 126, 234, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .teacher-card:hover .teacher-image {
+            transform: scale(1.05);
+            box-shadow: 0 12px 40px rgba(102, 126, 234, 0.5);
         }
 
         .teacher-info {
             flex: 1;
+            position: relative;
+            z-index: 1;
         }
 
         .teacher-name {
-            font-size: 1.8rem;
-            font-weight: 700;
-            margin-bottom: 5px;
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 8px;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         .teacher-level {
             color: var(--accent);
             font-weight: 600;
+            font-size: 1.1rem;
             margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .teacher-level::before {
+            content: '⭐';
+            font-size: 1.2rem;
         }
 
         .teacher-description {
-            opacity: 0.8;
-            margin-bottom: 15px;
+            opacity: 0.85;
+            margin-bottom: 20px;
+            font-size: 1.05rem;
+            line-height: 1.7;
         }
 
         .teacher-social {
@@ -377,120 +517,140 @@
         }
 
         .social-icon {
-            width: 36px;
-            height: 36px;
+            width: 42px;
+            height: 42px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             background: rgba(255, 255, 255, 0.1);
+            color: var(--foreground);
+            text-decoration: none;
             transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .social-icon:hover {
-            background: var(--primary);
-            transform: translateY(-3px);
+            background: var(--gradient-primary);
+            transform: translateY(-3px) scale(1.1);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+            border-color: transparent;
         }
 
         /* Church Section */
         .church {
-            margin: 80px 0;
+            margin: 100px 0;
         }
 
         .church-card {
-            padding: 40px;
+            padding: 50px;
         }
 
         .church-header {
             text-align: center;
-            margin-bottom: 40px;
+            margin-bottom: 50px;
         }
 
         .church-title {
-            font-size: 3rem;
-            font-weight: 800;
-            margin-bottom: 10px;
+            font-size: 3.5rem;
+            font-weight: 900;
+            margin-bottom: 15px;
         }
 
         .church-subtitle {
-            font-size: 1.2rem;
+            font-size: 1.3rem;
             opacity: 0.8;
+            color: var(--muted);
         }
 
         .church-content {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 40px;
+            gap: 50px;
+            margin-bottom: 40px;
         }
 
         .church-map {
-            border-radius: 12px;
+            border-radius: 20px;
             overflow: hidden;
-            height: 300px;
+            height: 350px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
         }
 
         .church-links {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
         }
 
         .church-link {
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 20px;
-            border-radius: 12px;
+            padding: 25px;
+            border-radius: 16px;
             text-decoration: none;
             color: var(--foreground);
             transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .church-link:hover {
             transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.2);
         }
 
         .church-link i {
-            font-size: 2rem;
-            margin-bottom: 10px;
+            font-size: 2.5rem;
+            margin-bottom: 12px;
         }
 
         .church-link span {
             font-weight: 600;
             text-align: center;
+            font-size: 1.05rem;
         }
 
         .church-address {
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 15px;
+            padding: 20px;
             background: rgba(255, 255, 255, 0.05);
-            border-radius: 12px;
-            margin-top: 15px;
+            border-radius: 16px;
+            margin-top: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .church-address i {
-            color: #ef4444;
-            margin-right: 10px;
+            color: var(--accent);
+            margin-right: 12px;
+            font-size: 1.3rem;
+        }
+
+        .church-address span {
+            font-size: 1.1rem;
         }
 
         .church-footer {
             text-align: center;
-            padding: 20px;
-            margin-top: 30px;
-            border-radius: 12px;
+            padding: 25px;
+            margin-top: 40px;
+            border-radius: 16px;
             background: rgba(6, 182, 212, 0.1);
+            border: 1px solid rgba(6, 182, 212, 0.2);
         }
 
         .church-footer i {
-            color: #ef4444;
-            margin-right: 5px;
+            color: var(--accent);
+            margin-right: 8px;
         }
 
         /* Creator Section */
         .creator {
-            margin: 60px 0;
+            margin: 80px 0;
             text-align: center;
         }
 
@@ -498,166 +658,206 @@
             background: none;
             border: none;
             color: var(--muted);
-            font-size: 1rem;
+            font-size: 1.1rem;
             cursor: pointer;
-            transition: color 0.3s ease;
-            margin-bottom: 20px;
+            transition: all 0.3s ease;
+            margin-bottom: 30px;
+            padding: 10px 20px;
+            border-radius: 50px;
         }
 
         .creator-toggle:hover {
             color: var(--foreground);
+            background: rgba(255, 255, 255, 0.05);
         }
 
         .creator-card {
-            max-width: 400px;
+            max-width: 450px;
             margin: 0 auto;
-            padding: 30px;
+            padding: 40px;
             text-align: center;
             animation: fadeIn 0.5s ease;
         }
 
         .creator-name {
-            font-size: 1.5rem;
+            font-size: 1.8rem;
             font-weight: 700;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         .creator-role {
             opacity: 0.8;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
+            font-size: 1.1rem;
         }
 
         .creator-social {
             display: flex;
             justify-content: center;
-            gap: 15px;
-            margin-bottom: 20px;
+            gap: 20px;
+            margin-bottom: 25px;
         }
 
         .creator-social a {
-            width: 40px;
-            height: 40px;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
             text-decoration: none;
-            transition: transform 0.3s ease;
+            transition: all 0.3s ease;
+            font-size: 1.3rem;
         }
 
         .creator-social a:hover {
-            transform: scale(1.1);
+            transform: scale(1.15) translateY(-3px);
         }
 
         .creator-note {
-            font-size: 0.9rem;
+            font-size: 1rem;
             opacity: 0.8;
+            font-style: italic;
         }
 
         /* Footer */
         footer {
-            padding: 40px 0;
+            padding: 60px 0;
             border-top: 1px solid var(--border);
             text-align: center;
+            margin-top: 80px;
         }
 
         .footer-logo {
-            margin-bottom: 15px;
+            margin-bottom: 20px;
             position: relative;
             display: inline-block;
         }
 
         .footer-logo i {
-            font-size: 2rem;
-            color: var(--primary);
-        }
-
-        .footer-logo span {
-            position: absolute;
-            bottom: -5px;
-            right: -10px;
-            font-size: 0.8rem;
-            font-weight: 700;
-            color: var(--primary);
+            font-size: 3rem;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         .footer-text {
-            opacity: 0.8;
+            opacity: 0.7;
+            font-size: 1.05rem;
         }
 
         /* Responsividade */
         @media (max-width: 1024px) {
             .hero-title {
-                font-size: 3.5rem;
+                font-size: 4rem;
             }
             
             .hero-subtitle {
-                font-size: 1.5rem;
+                font-size: 1.7rem;
             }
             
             .section-title {
-                font-size: 2.5rem;
+                font-size: 3rem;
+            }
+
+            .teachers-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .church-content {
+                grid-template-columns: 1fr;
             }
         }
 
         @media (max-width: 768px) {
+            .hero {
+                padding: 40px 20px;
+                min-height: 500px;
+            }
+
             .hero-title {
-                font-size: 2.8rem;
+                font-size: 3rem;
             }
             
             .hero-subtitle {
-                font-size: 1.3rem;
+                font-size: 1.4rem;
             }
             
             .section-title {
-                font-size: 2rem;
+                font-size: 2.5rem;
             }
-            
+
+            .section-subtitle {
+                font-size: 1.1rem;
+            }
+
             .teacher-card {
                 flex-direction: column;
                 text-align: center;
+                padding: 30px;
             }
-            
-            .church-content {
+
+            .teacher-image {
+                width: 150px;
+                height: 150px;
+            }
+
+            .intro-title {
+                font-size: 3rem;
+            }
+
+            .auth-buttons {
+                justify-content: center;
+                width: 100%;
+            }
+
+            .hero-cta {
+                flex-direction: column;
+            }
+
+            .hero-cta .btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .features-grid {
                 grid-template-columns: 1fr;
             }
-            
-            .intro-title {
-                font-size: 2.5rem;
-            }
-            
-            .auth-buttons {
-                position: static;
-                justify-content: center;
-                margin-bottom: 20px;
+
+            .church-links {
+                grid-template-columns: 1fr;
             }
         }
 
         @media (max-width: 480px) {
             .hero-title {
-                font-size: 2.2rem;
+                font-size: 2.5rem;
             }
             
             .hero-subtitle {
-                font-size: 1.1rem;
+                font-size: 1.2rem;
             }
             
             .section-title {
-                font-size: 1.8rem;
-            }
-            
-            .features-grid,
-            .teachers-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .church-links {
-                grid-template-columns: 1fr;
-            }
-            
-            .intro-title {
                 font-size: 2rem;
+            }
+
+            .intro-title {
+                font-size: 2.5rem;
+            }
+
+            .teacher-card {
+                padding: 25px;
+            }
+
+            .church-card {
+                padding: 30px 20px;
             }
         }
     </style>
@@ -665,21 +865,12 @@
 <body>
     <!-- Intro Animation -->
     <div id="intro-animation">
-        <button class="sound-toggle" id="sound-toggle">
-            <i class="fas fa-volume-up"></i>
-        </button>
-        
         <div class="intro-content">
-            <h1 class="intro-title">IT'S THE FUTURE</h1>
-            <p class="intro-subtitle">Click anywhere to continue</p>
+            <h1 class="intro-title">NORTHERN LIGHTS</h1>
+            <p class="intro-subtitle">Aprenda Inglês com Excelência</p>
             <div class="intro-bounce">▼</div>
+            <p style="margin-top: 20px; opacity: 0.7; font-size: 0.9rem;">Clique para continuar</p>
         </div>
-        
-        <div class="particles" id="particles"></div>
-        
-        <audio id="intro-audio" loop>
-            <source src="/sounds/future-intro.mp3" type="audio/mp3">
-        </audio>
     </div>
 
     <!-- Conteúdo Principal -->
@@ -688,90 +879,134 @@
             <!-- Header com botões de autenticação -->
             <header>
                 <div class="auth-buttons">
-                    <button class="btn btn-primary" id="login-btn">
-                        <i class="fas fa-sign-in-alt"></i> Login
-                    </button>
-                    <button class="btn btn-secondary" id="register-btn">
-                        <i class="fas fa-user-plus"></i> Register
-                    </button>
+                    <a href="login.html" class="btn btn-outline">
+                        <i class="fas fa-sign-in-alt"></i> Entrar
+                    </a>
+                    <a href="register.html" class="btn btn-primary">
+                        <i class="fas fa-user-plus"></i> Criar Conta
+                    </a>
                 </div>
             </header>
 
             <!-- Hero Section -->
             <section class="hero">
-                <img src="https://images.unsplash.com/photo-1519681393784-d120267933ba?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Northern Lights" class="hero-image">
-                <div class="hero-overlay"></div>
                 <div class="hero-content">
+                    <div class="hero-badge">
+                        <i class="fas fa-star"></i> Aprenda Inglês 
+                    </div>
                     <h1 class="hero-title aurora-text">NORTHERN LIGHTS</h1>
-                    <p class="hero-subtitle">Northern Lights: where the Lord's light illuminates your journey in English and throughout your life.</p>
+                    <p class="hero-subtitle">Onde a luz do Senhor ilumina sua jornada no inglês e em toda sua vida</p>
                     <p class="hero-description">
-                        At Northern Lights, learning English goes far beyond memorizing words — it's a transformative journey guided by excellence in teaching and grounded in the truth of the Gospel.
-                        Here, each lesson is carefully designed to provide solid, dynamic, and accessible learning for all levels. But what truly sets us apart is our purpose: to teach with Christian values, where the light of the Lord guides not only the mind but also the heart.
+                        No Northern Lights, aprender inglês vai muito além de memorizar palavras — é uma jornada transformadora guiada pela excelência no ensino e fundamentada na verdade do Evangelho. 
+                        Aqui, cada aula é cuidadosamente projetada para proporcionar aprendizado sólido, dinâmico e acessível para todos os níveis. Mas o que verdadeiramente nos diferencia é nosso propósito: ensinar com valores cristãos, onde a luz do Senhor guia não apenas a mente, mas também o coração.
                     </p>
+                    <div class="hero-cta">
+                        <a href="register.html" class="btn btn-primary">
+                            <i class="fas fa-rocket"></i> Começar Agora
+                        </a>
+                        <a href="#teachers" class="btn btn-secondary">
+                            <i class="fas fa-users"></i> Conheça Nossos Professores
+                        </a>
+                    </div>
                 </div>
             </section>
 
             <!-- Features Section -->
             <section class="features">
-                <h2 class="section-title aurora-text">Illuminate Your Learning</h2>
+                <h2 class="section-title aurora-text">Por Que Escolher Northern Lights?</h2>
+                <p class="section-subtitle">
+                    Uma plataforma completa de ensino de inglês com tecnologia de ponta e valores cristãos
+                </p>
                 
                 <div class="features-grid">
                     <div class="glass-card feature-card">
-                        <div class="feature-icon" style="background: var(--gradient-secondary);">
+                        <div class="feature-icon" style="background: var(--gradient-primary);">
                             <i class="fas fa-book-open"></i>
                         </div>
-                        <h3 class="feature-title">Interactive Questions</h3>
+                        <h3 class="feature-title">Questões Interativas</h3>
                         <p class="feature-description">
-                            Engage with multimedia questions that support text, images, and complex analysis tasks
+                            Pratique com questões multimídia que suportam texto, imagens e tarefas de análise complexas. Aprenda de forma dinâmica e envolvente.
                         </p>
                     </div>
                     
                     <div class="glass-card feature-card">
                         <div class="feature-icon" style="background: var(--gradient-accent);">
-                            <i class="fas fa-sparkles"></i>
+                            <i class="fas fa-chart-line"></i>
                         </div>
-                        <h3 class="feature-title">Performance Analytics</h3>
+                        <h3 class="feature-title">Acompanhamento de Progresso</h3>
                         <p class="feature-description">
-                            Track progress with beautiful visualizations and personalized insights
+                            Acompanhe seu desenvolvimento com visualizações bonitas e insights personalizados. Veja sua evolução em tempo real.
                         </p>
                     </div>
                     
                     <div class="glass-card feature-card">
-                        <div class="feature-icon" style="background: var(--gradient-primary);">
-                            <i class="fas fa-users"></i>
+                        <div class="feature-icon" style="background: var(--gradient-secondary);">
+                            <i class="fas fa-video"></i>
                         </div>
-                        <h3 class="feature-title">Collaborative Learning</h3>
+                        <h3 class="feature-title">Aulas ao Vivo e Gravadas</h3>
                         <p class="feature-description">
-                            Connect students and teachers in a seamless educational ecosystem
+                            Participe de aulas ao vivo interativas ou assista às aulas gravadas no seu próprio ritmo. Flexibilidade total para aprender.
+                        </p>
+                    </div>
+
+                    <div class="glass-card feature-card">
+                        <div class="feature-icon" style="background: var(--gradient-english);">
+                            <i class="fas fa-graduation-cap"></i>
+                        </div>
+                        <h3 class="feature-title">Níveis A1 até C2</h3>
+                        <p class="feature-description">
+                            Do iniciante ao avançado, temos professores especializados para cada nível. Sua jornada de aprendizado começa aqui.
+                        </p>
+                    </div>
+
+                    <div class="glass-card feature-card">
+                        <div class="feature-icon" style="background: var(--gradient-primary);">
+                            <i class="fas fa-trophy"></i>
+                        </div>
+                        <h3 class="feature-title">Sistema de Notas e Avaliações</h3>
+                        <p class="feature-description">
+                            Receba feedback detalhado sobre seu desempenho em provas e atividades semanais. Melhore continuamente com avaliações precisas.
+                        </p>
+                    </div>
+
+                    <div class="glass-card feature-card">
+                        <div class="feature-icon" style="background: var(--gradient-accent);">
+                            <i class="fas fa-heart"></i>
+                        </div>
+                        <h3 class="feature-title">Valores Cristãos</h3>
+                        <p class="feature-description">
+                            Aprenda inglês em um ambiente que valoriza princípios cristãos, onde a educação e a fé caminham juntas.
                         </p>
                     </div>
                 </div>
             </section>
 
             <!-- Teachers Section -->
-            <section class="teachers">
-                <h2 class="section-title aurora-text">Our Dedicated Teachers</h2>
-                <p class="hero-subtitle" style="text-align: center; margin-bottom: 40px;">
-                    Meet the passionate educators who will guide you on your language learning journey
+            <section class="teachers" id="teachers">
+                <h2 class="section-title aurora-text">Nossos Professores Dedicados</h2>
+                <p class="section-subtitle">
+                    Conheça os educadores apaixonados que vão guiá-lo em sua jornada de aprendizado de inglês
                 </p>
                 
                 <div class="teachers-grid">
                     <div class="glass-card teacher-card">
-                        <img src="https://images.unsplash.com/photo-1494790108755-2616b612b786?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80" alt="Evelyn Lima" class="teacher-image">
+                        <div class="teacher-image-wrapper">
+                            <img src="../img/Evellyn.jpeg" alt="Evellyn Lima" class="teacher-image">
+                        </div>
                         <div class="teacher-info">
-                            <h3 class="teacher-name">Evelyn Lima</h3>
-                            <p class="teacher-level">English Teacher for Levels A1 to B1</p>
+                            <h3 class="teacher-name">Evellyn Lima</h3>
+                            <p class="teacher-level">Professora de Inglês - Níveis A1 a B1</p>
                             <p class="teacher-description">
-                                Evelyn is a passionate English teacher dedicated to helping beginners and intermediate students build a strong foundation and confidence in the language.
+                                Evellyn é uma professora de inglês apaixonada, dedicada a ajudar alunos iniciantes e intermediários a construir uma base sólida e confiança no idioma. Com metodologia dinâmica e acolhedora, ela torna o aprendizado acessível e prazeroso.
                             </p>
                             <div class="teacher-social">
-                                <a href="#" class="social-icon">
+                                <a href="#" class="social-icon" title="Facebook">
                                     <i class="fab fa-facebook-f"></i>
                                 </a>
-                                <a href="#" class="social-icon">
+                                <a href="#" class="social-icon" title="Instagram">
                                     <i class="fab fa-instagram"></i>
                                 </a>
-                                <a href="#" class="social-icon">
+                                <a href="#" class="social-icon" title="LinkedIn">
                                     <i class="fab fa-linkedin-in"></i>
                                 </a>
                             </div>
@@ -779,21 +1014,23 @@
                     </div>
                     
                     <div class="glass-card teacher-card">
-                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80" alt="Vinícius Martinson" class="teacher-image">
+                        <div class="teacher-image-wrapper">
+                            <img src="../img/Vinicius.png" alt="Vinícius Martinson" class="teacher-image">
+                        </div>
                         <div class="teacher-info">
                             <h3 class="teacher-name">Vinícius Martinson</h3>
-                            <p class="teacher-level">English Teacher for Levels B2 to C2</p>
+                            <p class="teacher-level">Professor de Inglês - Níveis B2 a C2</p>
                             <p class="teacher-description">
-                                Vinícius is a dedicated English teacher who brings passion and expertise to help advanced students master the language and reach their highest potential.
+                                Vinícius é um professor de inglês dedicado que traz paixão e expertise para ajudar alunos avançados a dominar o idioma e alcançar seu maior potencial. Com experiência internacional, ele oferece uma perspectiva única e enriquecedora.
                             </p>
                             <div class="teacher-social">
-                                <a href="#" class="social-icon">
+                                <a href="#" class="social-icon" title="Facebook">
                                     <i class="fab fa-facebook-f"></i>
                                 </a>
-                                <a href="#" class="social-icon">
+                                <a href="#" class="social-icon" title="Instagram">
                                     <i class="fab fa-instagram"></i>
                                 </a>
-                                <a href="#" class="social-icon">
+                                <a href="#" class="social-icon" title="LinkedIn">
                                     <i class="fab fa-linkedin-in"></i>
                                 </a>
                             </div>
@@ -824,9 +1061,9 @@
                         </div>
                         
                         <div>
-                            <h3 style="text-align: center; margin-bottom: 20px; font-size: 1.8rem;">Conecte-se conosco</h3>
-                            <p style="text-align: center; margin-bottom: 30px; opacity: 0.8;">
-                                Venha nos visitar e fazer parte da nossa família em Cristo
+                            <h3 style="text-align: center; margin-bottom: 25px; font-size: 2rem; font-weight: 700;">Conecte-se Conosco</h3>
+                            <p style="text-align: center; margin-bottom: 35px; opacity: 0.85; font-size: 1.1rem; line-height: 1.7;">
+                                Venha nos visitar e fazer parte da nossa família em Cristo. Siga-nos nas redes sociais e acompanhe nossas atividades.
                             </p>
                             
                             <div class="church-links">
@@ -853,13 +1090,13 @@
                             
                             <div class="church-address">
                                 <i class="fas fa-map-marker-alt"></i>
-                                <span>272 Rua Inácio Mammana, Vila Aurora, SP</span>
+                                <span>Rua Inácio Mammana, 272 - Vila Aurora, São Paulo - SP</span>
                             </div>
                         </div>
                     </div>
                     
                     <div class="church-footer">
-                        <p>
+                        <p style="font-size: 1.1rem;">
                             <i class="fas fa-heart"></i>
                             Servindo a Cristo e à comunidade desde 1940
                         </p>
@@ -870,7 +1107,7 @@
             <!-- Creator Section -->
             <section class="creator">
                 <button class="creator-toggle" id="creator-toggle">
-                    Sobre o desenvolvedor
+                    <i class="fas fa-user-circle"></i> Sobre o Desenvolvedor
                 </button>
                 
                 <div id="creator-info" style="display: none;">
@@ -879,10 +1116,10 @@
                         <p class="creator-role">Desenvolvedor Full-Stack</p>
                         
                         <div class="creator-social">
-                            <a href="https://www.instagram.com/herbertt.mat/" target="_blank" style="background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);">
+                            <a href="https://www.instagram.com/herbertt.mat/" target="_blank" style="background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);" title="Instagram">
                                 <i class="fab fa-instagram"></i>
                             </a>
-                            <a href="https://www.linkedin.com/in/herbertmatheus/" target="_blank" style="background: #0a66c2;">
+                            <a href="https://www.linkedin.com/in/herbertmatheus/" target="_blank" style="background: #0a66c2;" title="LinkedIn">
                                 <i class="fab fa-linkedin-in"></i>
                             </a>
                         </div>
@@ -897,11 +1134,10 @@
             <!-- Footer -->
             <footer>
                 <div class="footer-logo">
-                    <i class="fas fa-signature"></i>
-                    <span>TH</span>
+                    <i class="fas fa-mountain"></i>
                 </div>
                 <p class="footer-text">
-                    Powered by the magic of the Northern Lights • Aurora Educational System 2024
+                    Powered by the magic of the Northern Lights • Sistema Educacional Aurora 2024
                 </p>
             </footer>
         </div>
@@ -911,112 +1147,62 @@
         // Elementos DOM
         const introAnimation = document.getElementById('intro-animation');
         const mainContent = document.getElementById('main-content');
-        const soundToggle = document.getElementById('sound-toggle');
-        const introAudio = document.getElementById('intro-audio');
-        const particlesContainer = document.getElementById('particles');
-        const loginBtn = document.getElementById('login-btn');
-        const registerBtn = document.getElementById('register-btn');
         const creatorToggle = document.getElementById('creator-toggle');
         const creatorInfo = document.getElementById('creator-info');
 
         // Estado da aplicação
-        let muted = false;
         let clicked = false;
 
         // Inicialização
         document.addEventListener('DOMContentLoaded', function() {
-            // Criar partículas
-            createParticles();
-            
-            // Configurar áudio
-            introAudio.volume = 0.3;
-            
-            // Tentar reproduzir áudio automaticamente
-            tryPlayAudio();
-            
             // Configurar temporizador para finalização automática
             setTimeout(() => {
                 if (!clicked) {
                     finishIntro();
                 }
-            }, 2500);
+            }, 3000);
         });
-
-        // Criar partículas
-        function createParticles() {
-            for (let i = 0; i < 20; i++) {
-                const particle = document.createElement('div');
-                particle.classList.add('particle');
-                particle.style.left = `${Math.random() * 100}%`;
-                particle.style.top = `${Math.random() * 100}%`;
-                particle.style.animationDelay = `${i * 0.1}s`;
-                particle.style.opacity = Math.random() * 0.5 + 0.3;
-                particlesContainer.appendChild(particle);
-            }
-        }
-
-        // Tentar reproduzir áudio
-        function tryPlayAudio() {
-            if (!muted) {
-                introAudio.play()
-                    .then(() => console.log("Áudio reproduzido com sucesso"))
-                    .catch(error => console.log("Autoplay bloqueado:", error));
-            }
-        }
 
         // Finalizar intro
         function finishIntro() {
             clicked = true;
             
-            // Se o áudio não estava tocando, tentar tocar agora
-            if (!muted && introAudio.paused) {
-                introAudio.play().catch(error => console.log("Erro ao reproduzir áudio:", error));
-            }
+            // Animação de fade out
+            introAnimation.style.opacity = '0';
+            introAnimation.style.transition = 'opacity 0.5s ease';
             
-            // Esconder intro e mostrar conteúdo principal
-            introAnimation.style.display = 'none';
-            mainContent.style.display = 'block';
+            setTimeout(() => {
+                introAnimation.style.display = 'none';
+                mainContent.style.display = 'block';
+                mainContent.style.animation = 'fadeIn 0.8s ease';
+            }, 500);
         }
 
         // Event Listeners
         introAnimation.addEventListener('click', finishIntro);
 
-        soundToggle.addEventListener('click', function(e) {
-            e.stopPropagation();
-            muted = !muted;
-            
-            if (muted) {
-                introAudio.volume = 0;
-                soundToggle.innerHTML = '<i class="fas fa-volume-mute"></i>';
-            } else {
-                introAudio.volume = 0.3;
-                soundToggle.innerHTML = '<i class="fas fa-volume-up"></i>';
-                
-                // Se o áudio não estava tocando, tentar tocar agora
-                if (introAudio.paused) {
-                    introAudio.play().catch(error => console.log("Erro ao reproduzir áudio:", error));
-                }
-            }
-        });
-
-        loginBtn.addEventListener('click', function() {
-            alert('Redirecionando para a página de login...');
-            // Em uma aplicação real: window.location.href = "/login";
-        });
-
-        registerBtn.addEventListener('click', function() {
-            alert('Redirecionando para a página de registro...');
-            // Em uma aplicação real: window.location.href = "/register";
-        });
-
         creatorToggle.addEventListener('click', function() {
             if (creatorInfo.style.display === 'none') {
                 creatorInfo.style.display = 'block';
-                creatorToggle.textContent = 'Ocultar informações';
+                creatorToggle.innerHTML = '<i class="fas fa-times-circle"></i> Ocultar Informações';
             } else {
                 creatorInfo.style.display = 'none';
-                creatorToggle.textContent = 'Sobre o desenvolvedor';
+                creatorToggle.innerHTML = '<i class="fas fa-user-circle"></i> Sobre o Desenvolvedor';
             }
+        });
+
+        // Smooth scroll para links internos
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
         });
     </script>
 </body>
