@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Salas de Aula - Northern Lights</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../../css/teacher-dashboard.css">
+    <style>
+        .classrooms-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .create-panel, .list-panel {
+            background: rgba(30, 41, 59, 0.7);
+            border-radius: 16px;
+            padding: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #f8fafc;
+        }
+
+        .form-input, .form-textarea {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(15, 23, 42, 0.8);
+            color: #f8fafc;
+            font-size: 1rem;
+        }
+
+        .form-textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .form-input:focus, .form-textarea:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .btn-create {
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .btn-create:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(59, 130, 246, 0.3);
+        }
+
+        .meet-card {
+            background: rgba(15, 23, 42, 0.8);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .meet-card:hover {
+            border-color: #3b82f6;
+            transform: translateY(-2px);
+        }
+
+        .meet-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 15px;
+        }
+
+        .meet-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #3b82f6;
+            margin-bottom: 5px;
+        }
+
+        .meet-description {
+            color: #94a3b8;
+            margin: 10px 0;
+        }
+
+        .meet-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin: 15px 0;
+            font-size: 0.9rem;
+            color: #94a3b8;
+        }
+
+        .meet-link {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 15px;
+            background: rgba(59, 130, 246, 0.1);
+            border-radius: 8px;
+            margin: 10px 0;
+            word-break: break-all;
+        }
+
+        .meet-link a {
+            color: #3b82f6;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .meet-link a:hover {
+            text-decoration: underline;
+        }
+
+        .meet-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .btn-action {
+            padding: 8px 16px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            flex: 1;
+        }
+
+        .btn-send-email {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+        }
+
+        .btn-send-email:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(16, 185, 129, 0.3);
+        }
+
+        .btn-edit {
+            background: rgba(59, 130, 246, 0.2);
+            color: #3b82f6;
+            border: 1px solid #3b82f6;
+        }
+
+        .btn-edit:hover {
+            background: rgba(59, 130, 246, 0.3);
+        }
+
+        .btn-delete {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+            border: 1px solid #ef4444;
+        }
+
+        .btn-delete:hover {
+            background: rgba(239, 68, 68, 0.3);
+        }
+
+        .present-count {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 5px 12px;
+            background: rgba(16, 185, 129, 0.2);
+            color: #10b981;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        @media (max-width: 1024px) {
+            .classrooms-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Mobile Menu Toggle -->
+    <button class="mobile-menu-toggle" id="mobile-menu-toggle">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- Mobile Header Actions -->
+    <div class="mobile-header-actions">
+        <button class="btn btn-secondary" id="mobile-refresh-btn">
+            <i class="fas fa-sync-alt"></i>
+        </button>
+        <button class="btn btn-danger" id="mobile-logout-btn">
+            <i class="fas fa-sign-out-alt"></i>
+        </button>
+    </div>
+
+    <!-- Mobile Overlay -->
+    <div class="mobile-overlay" id="mobile-overlay"></div>
+
+    <div class="dashboard-container">
+        <aside class="sidebar mobile-hidden" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class="fas fa-graduation-cap logo-icon"></i>
+                    <div class="logo-text">Northern Lights</div>
+                </div>
+                <div class="user-info" onclick="openProfileModal()" style="cursor: pointer;">
+                    <div class="user-avatar" id="user-avatar">TL</div>
+                    <div class="user-details">
+                        <div class="user-name" id="user-name">Professor</div>
+                        <div class="user-role">Professor</div>
+                    </div>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <div class="nav-title">Principal</div>
+                    <a href="/page/teacher-dashboard.html">
+                        <div class="nav-item">
+                            <i class="fas fa-chart-bar"></i>
+                            <span>Dashboard</span>
+                        </div>
+                    </a>
+                </div>
+                <div class="nav-section">
+                    <div class="nav-title">Conteúdo</div>
+                    <a href="/page/DashBoardTeacher-Nav/Questions.html">
+                        <div class="nav-item">
+                            <i class="fas fa-file-alt"></i>
+                            <span>Questões</span>
+                        </div>
+                    </a>
+                    <a href="/page/DashBoardTeacher-Nav/Corrections.html">
+                        <div class="nav-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Correções</span>
+                        </div>
+                    </a>
+                    <a href="/page/DashBoardTeacher-Nav/ClassRoom.html">
+                        <div class="nav-item active">
+                            <i class="fas fa-video"></i>
+                            <span>Salas de Aula</span>
+                        </div>
+                    </a>
+                </div>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <div class="content-header">
+                <div>
+                    <h1 class="header-title">
+                        <i class="fas fa-video"></i> Salas de Aula
+                    </h1>
+                    <p class="header-subtitle">Gerencie suas aulas e envie links do Google Meet para os alunos</p>
+                </div>
+                <div class="header-actions">
+                    <button class="btn btn-info" onclick="openHelpModal('classrooms')" title="Ajuda">
+                        <i class="fas fa-question-circle"></i> Ajuda
+                    </button>
+                    <button class="btn btn-secondary" id="refresh-btn">
+                        <i class="fas fa-sync-alt"></i> Atualizar
+                    </button>
+                    <button class="btn btn-danger" id="logout-btn">
+                        <i class="fas fa-sign-out-alt"></i> Sair
+                    </button>
+                </div>
+            </div>
+
+            <div id="message-container"></div>
+
+            <!-- Tabs Navigation -->
+            <div style="display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 2px solid rgba(255, 255, 255, 0.1);">
+                <button class="tab-btn active" id="live-classes-tab-btn" onclick="switchClassroomTab('live')">
+                    <i class="fas fa-video"></i> Aulas ao Vivo
+                </button>
+                <button class="tab-btn" id="recorded-classes-tab-btn" onclick="switchClassroomTab('recorded')">
+                    <i class="fas fa-film"></i> Galeria de Aulas Gravadas
+                </button>
+            </div>
+
+            <!-- Tab: Aulas ao Vivo -->
+            <div id="live-classes-tab" class="tab-content active" style="display: block;">
+            <div class="classrooms-container">
+                <!-- Painel de Criação -->
+                <div class="create-panel">
+                    <h2 style="margin-bottom: 20px; color: #3b82f6;">
+                        <i class="fas fa-plus-circle"></i> Criar Nova Sala de Aula
+                    </h2>
+
+                    <form id="create-meet-form">
+                        <div class="form-group">
+                            <label class="form-label">Título da Aula *</label>
+                            <input 
+                                type="text" 
+                                class="form-input" 
+                                id="meet-title" 
+                                placeholder="Ex: Aula de Inglês - Nível B1"
+                                required
+                            >
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Descrição</label>
+                            <textarea 
+                                class="form-textarea" 
+                                id="meet-description" 
+                                placeholder="Descreva o conteúdo da aula..."
+                            ></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Link do Google Meet *</label>
+                            <input 
+                                type="url" 
+                                class="form-input" 
+                                id="meet-link" 
+                                placeholder="https://meet.google.com/xxx-xxxx-xxx"
+                                required
+                            >
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Data e Hora de Início *</label>
+                            <input 
+                                type="datetime-local" 
+                                class="form-input" 
+                                id="meet-start" 
+                                required
+                            >
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Data e Hora de Término *</label>
+                            <input 
+                                type="datetime-local" 
+                                class="form-input" 
+                                id="meet-end" 
+                                required
+                            >
+                        </div>
+
+                        <button type="submit" class="btn-create">
+                            <i class="fas fa-save"></i> Criar Sala de Aula
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Painel de Lista -->
+                <div class="list-panel">
+                    <h2 style="margin-bottom: 20px; color: #10b981;">
+                        <i class="fas fa-list"></i> Salas de Aula Criadas
+                    </h2>
+
+                    <div id="meets-list">
+                        <div class="loading">
+                            <i class="fas fa-spinner fa-spin"></i>
+                            <span>Carregando salas de aula...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+
+            <!-- Tab: Galeria de Aulas Gravadas -->
+            <div id="recorded-classes-tab" class="tab-content" style="display: none; position: relative; z-index: 1;">
+                <div class="recorded-classes-container" style="background: linear-gradient(135deg, rgba(30, 41, 59, 0.95), rgba(15, 23, 42, 0.95)) !important; border-radius: 20px !important; padding: 30px !important; min-height: 500px !important; display: block !important; visibility: visible !important; opacity: 1 !important; width: 100% !important; position: relative !important; z-index: 2 !important; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3) !important; border: 1px solid rgba(251, 191, 36, 0.2) !important;">
+                    <!-- Header da Galeria -->
+                    <div class="gallery-header" style="display: flex !important; justify-content: space-between !important; align-items: center !important; margin-bottom: 30px !important; flex-wrap: wrap !important; gap: 20px !important; padding-bottom: 20px !important; border-bottom: 2px solid rgba(251, 191, 36, 0.3) !important;">
+                        <div>
+                            <h2 style="margin: 0 0 8px 0 !important; color: #fbbf24 !important; font-size: 2rem !important; font-weight: 700 !important; display: flex !important; align-items: center !important; gap: 12px !important; text-shadow: 0 2px 10px rgba(251, 191, 36, 0.3) !important;">
+                                <i class="fas fa-film" style="font-size: 2.2rem;"></i> Galeria de Aulas Gravadas
+                            </h2>
+                            <p style="margin: 0 !important; color: #94a3b8 !important; font-size: 0.95rem !important; font-weight: 400 !important;">
+                                Gerencie e organize suas aulas gravadas para os alunos
+                            </p>
+                        </div>
+                        <button class="btn btn-primary add-recorded-class-btn" onclick="openRecordedClassModal()" style="white-space: nowrap !important; display: inline-flex !important; align-items: center !important; gap: 10px !important; padding: 14px 28px !important; font-size: 1.05rem !important; font-weight: 600 !important; cursor: pointer !important; border: none !important; border-radius: 12px !important; background: linear-gradient(135deg, #3b82f6, #2563eb) !important; color: white !important; transition: all 0.3s ease !important; box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4) !important; visibility: visible !important; opacity: 1 !important;">
+                            <i class="fas fa-plus-circle" style="font-size: 1.1rem;"></i> Adicionar Aula Gravada
+                        </button>
+                    </div>
+                    <div id="recorded-classes-grid" style="display: grid !important; grid-template-columns: repeat(auto-fill, minmax(400px, 1fr)) !important; gap: 30px !important; min-height: 400px !important; visibility: visible !important; opacity: 1 !important; width: 100% !important; position: relative !important; z-index: 1 !important;">
+                        <div class="loading" style="grid-column: 1 / -1; text-align: center; padding: 60px 20px; color: #94a3b8; display: block !important; visibility: visible !important;">
+                            <i class="fas fa-spinner fa-spin" style="font-size: 3rem; margin-bottom: 20px; color: #3b82f6;"></i>
+                            <span style="display: block; margin-top: 15px; font-size: 1.1rem; font-weight: 500;">Carregando aulas gravadas...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../../js/user-display-manager.js"></script>
+    <script src="../../js/auth-service.js"></script>
+    <script src="../../js/classroom-manager.js"></script>
+    <script src="../../js/profile-manager.js"></script>
+    <script src="../../js/help-manager.js"></script>
+    <script src="../../js/mobile-navbar.js"></script>
+    <script src="../../js/common-profile-help.js"></script>
+    
+    <!-- Modal para Adicionar/Editar Aula Gravada -->
+    <div id="recorded-class-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); z-index: 10000; align-items: center; justify-content: center;">
+        <div style="background: rgba(30, 41, 59, 0.95); border-radius: 16px; padding: 30px; max-width: 600px; width: 90%; max-height: 90vh; overflow-y: auto; border: 2px solid rgba(59, 130, 246, 0.3);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h2 id="recorded-class-modal-title" style="color: #f8fafc; margin: 0;">
+                    <i class="fas fa-plus-circle"></i> Adicionar Aula Gravada
+                </h2>
+                <button onclick="closeRecordedClassModal()" style="background: none; border: none; color: #94a3b8; font-size: 1.5rem; cursor: pointer; padding: 5px 10px;">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <form id="recorded-class-form">
+                <input type="hidden" id="recorded-class-id">
+                <div class="form-group">
+                    <label class="form-label">Título da Aula *</label>
+                    <input type="text" class="form-input" id="recorded-class-title" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Descrição</label>
+                    <textarea class="form-textarea" id="recorded-class-description"></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">URL do Vídeo *</label>
+                    <input type="url" class="form-input" id="recorded-class-video-url" placeholder="https://www.youtube.com/watch?v=..." required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Data da Aula *</label>
+                    <input type="date" class="form-input" id="recorded-class-date" required>
+                </div>
+                <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px;">
+                    <button type="button" onclick="closeRecordedClassModal()" class="btn btn-secondary">
+                        Cancelar
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Salvar Aula
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Incluir modais -->
+    <div id="profile-modal-container"></div>
+    <div id="help-modal-container"></div>
+    
+    <script>
+        // Carregar modais
+        fetch('../../components/profile-modal.html')
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('profile-modal-container').innerHTML = html;
+            })
+            .catch(err => console.error('Erro ao carregar modal de perfil:', err));
+        
+        fetch('../../components/help-modal.html')
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('help-modal-container').innerHTML = html;
+            })
+            .catch(err => console.error('Erro ao carregar modal de ajuda:', err));
+    </script>
+    
+    <style>
+        .btn-info {
+            background: rgba(59, 130, 246, 0.2);
+            color: #3b82f6;
+            border: 2px solid rgba(59, 130, 246, 0.3);
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-info:hover {
+            background: rgba(59, 130, 246, 0.3);
+            border-color: #3b82f6;
+            transform: translateY(-2px);
+        }
+        .header-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        
+        /* Garantir que a aba de aulas gravadas seja visível quando ativa */
+        #recorded-classes-tab.active,
+        #recorded-classes-tab[style*="display: block"],
+        #recorded-classes-tab {
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            position: relative !important;
+            z-index: 10 !important;
+            min-height: 500px !important;
+        }
+        
+        #recorded-classes-tab.active > div,
+        #recorded-classes-tab > div {
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+        }
+        
+        #recorded-classes-tab.active #recorded-classes-grid,
+        #recorded-classes-tab #recorded-classes-grid {
+            display: grid !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+        }
+        
+        #recorded-classes-tab.active button,
+        #recorded-classes-tab button {
+            display: inline-flex !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+        }
+        
+        /* Forçar visibilidade de todos os elementos dentro da aba */
+        #recorded-classes-tab * {
+            visibility: visible !important;
+        }
+        
+        /* Estilos melhorados para os cards de aulas gravadas */
+        .recorded-class-card {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        }
+        
+        .recorded-class-card:hover {
+            transform: translateY(-8px) scale(1.02) !important;
+            box-shadow: 0 16px 48px rgba(251, 191, 36, 0.3) !important;
+            border-color: rgba(251, 191, 36, 0.5) !important;
+        }
+        
+        /* Botão de adicionar com hover melhorado */
+        .add-recorded-class-btn:hover {
+            transform: translateY(-3px) !important;
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.5) !important;
+        }
+        
+        .add-recorded-class-btn:active {
+            transform: translateY(-1px) !important;
+        }
+        
+        /* Header da galeria com gradiente sutil */
+        .gallery-header {
+            background: linear-gradient(90deg, transparent, rgba(251, 191, 36, 0.05), transparent) !important;
+        }
+        
+        /* Responsividade para mobile */
+        @media (max-width: 768px) {
+            #recorded-classes-grid {
+                grid-template-columns: 1fr !important;
+                gap: 20px !important;
+            }
+            
+            .gallery-header {
+                flex-direction: column !important;
+                align-items: stretch !important;
+            }
+            
+            .add-recorded-class-btn {
+                width: 100% !important;
+                justify-content: center !important;
+            }
+        }
+    </style>
+</body>
+</html>
+
+

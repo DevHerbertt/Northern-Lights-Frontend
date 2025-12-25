@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Northern Lights - Criar Questão</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/DashBoardTeacher-StyleofNavs/stylesQuestions.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo-container">
+                <div class="logo-icon">
+                    <i class="fas fa-chalkboard-teacher"></i>
+                </div>
+                <h1>NORTHERN LIGHTS</h1>
+                <p class="logo-subtitle">Painel do Professor</p>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <ul>
+                    <li>
+                        <a href="/page/DashBoardTeacher-Nav/TeacherDashboard.html">
+                            <i class="fas fa-tachometer-alt"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="active">
+                        <a href="#">
+                            <i class="fas fa-question-circle"></i>
+                            <span>Criar Questão</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/page/DashBoardTeacher-Nav/TeacherManageQuestions.html">
+                            <i class="fas fa-list"></i>
+                            <span>Minhas Questões</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/page/DashBoardTeacher-Nav/TeacherManageTeachers.html">
+                            <i class="fas fa-users"></i>
+                            <span>Professores</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            
+            <div class="user-profile">
+                <div class="user-avatar">
+                    <img src="https://ui-avatars.com/api/?name=Professor&background=3a86ff&color=fff" alt="Professor">
+                </div>
+                <div class="user-info">
+                    <h4>Carregando...</h4>
+                    <p>carregando@email.com</p>
+                </div>
+                <a href="#" class="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i>
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="main-header">
+                <h2><i class="fas fa-question-circle"></i> Criar Nova Questão</h2>
+                <div class="header-actions">
+                    <button class="btn btn-secondary" onclick="window.location.href='/page/DashBoardTeacher-Nav/TeacherManageQuestions.html'">
+                        <i class="fas fa-list"></i> Ver Minhas Questões
+                    </button>
+                </div>
+            </header>
+            
+            <div class="content-wrapper">
+                <div class="form-container">
+                    <div class="form-header">
+                        <h3>Informações da Questão</h3>
+                        <p>Preencha os dados abaixo para criar uma nova questão</p>
+                    </div>
+                    
+                    <form id="createQuestionForm">
+                        <div class="form-group">
+                            <label for="questionTitle">
+                                <i class="fas fa-heading"></i> Título da Questão
+                            </label>
+                            <input type="text" id="questionTitle" placeholder="Digite o título da questão" required>
+                            <div class="input-hint">Ex: Problema de Matemática - Álgebra Linear</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="questionDescription">
+                                <i class="fas fa-file-alt"></i> Descrição da Questão
+                            </label>
+                            <textarea id="questionDescription" rows="6" placeholder="Descreva a questão em detalhes..." required></textarea>
+                            <div class="input-hint">Descreva o problema, contexto e qualquer informação relevante</div>
+                        </div>
+                        
+                        <!-- Upload de Imagem -->
+                        <div class="form-group">
+                            <label for="questionImage">
+                                <i class="fas fa-image"></i> Imagem da Questão (Opcional)
+                            </label>
+                            <div class="image-upload-container">
+                                <div class="image-preview" id="imagePreview">
+                                    <div class="image-placeholder">
+                                        <i class="fas fa-cloud-upload-alt"></i>
+                                        <p>Clique para fazer upload de uma imagem</p>
+                                        <span>Formatos suportados: JPG, PNG, GIF (Max: 5MB)</span>
+                                    </div>
+                                    <img id="previewImage" style="display: none;">
+                                </div>
+                                <input type="file" id="questionImage" accept="image/*" style="display: none;">
+                                <button type="button" class="btn btn-secondary" id="uploadImageBtn">
+                                    <i class="fas fa-upload"></i> Escolher Imagem
+                                </button>
+                                <button type="button" class="btn btn-danger" id="removeImageBtn" style="display: none;">
+                                    <i class="fas fa-trash"></i> Remover Imagem
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Opções da Questão -->
+                        <div class="form-group">
+                            <label>
+                                <i class="fas fa-list-ol"></i> Opções da Questão (Múltipla Escolha)
+                            </label>
+                            <div class="options-container">
+                                <div class="option-item">
+                                    <input type="radio" name="correctOption" value="0" checked>
+                                    <input type="text" class="option-input" placeholder="Opção A" data-option="0" required>
+                                    <span class="option-label">Correta</span>
+                                </div>
+                                <div class="option-item">
+                                    <input type="radio" name="correctOption" value="1">
+                                    <input type="text" class="option-input" placeholder="Opção B" data-option="1" required>
+                                </div>
+                                <div class="option-item">
+                                    <input type="radio" name="correctOption" value="2">
+                                    <input type="text" class="option-input" placeholder="Opção C" data-option="2" required>
+                                </div>
+                                <div class="option-item">
+                                    <input type="radio" name="correctOption" value="3">
+                                    <input type="text" class="option-input" placeholder="Opção D" data-option="3" required>
+                                </div>
+                                <div class="option-item">
+                                    <input type="radio" name="correctOption" value="4">
+                                    <input type="text" class="option-input" placeholder="Opção E (Opcional)" data-option="4">
+                                </div>
+                            </div>
+                            <div class="input-hint">Selecione a opção correta clicando no botão de rádio à esquerda</div>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-secondary" id="resetForm">
+                                <i class="fas fa-redo"></i> Limpar Formulário
+                            </button>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Salvar Questão
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                
+                <div class="info-panel">
+                    <div class="info-card">
+                        <div class="info-icon">
+                            <i class="fas fa-info-circle"></i>
+                        </div>
+                        <h4>Dicas para Criar Boas Questões</h4>
+                        <ul>
+                            <li>Use títulos claros e descritivos</li>
+                            <li>Descreva o problema de forma completa</li>
+                            <li>Adicione imagens quando necessário para ilustrar o problema</li>
+                            <li>Forneça opções de resposta claras e distintas</li>
+                            <li>Inclua uma explicação para ajudar os alunos a entenderem</li>
+                            <li>Verifique se há uma única opção correta marcada</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="stats-card">
+                        <h4>Estatísticas</h4>
+                        <div class="stat-item">
+                            <div class="stat-label">Total de Questões</div>
+                            <div class="stat-value" id="totalQuestions">0</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">Suas Questões</div>
+                            <div class="stat-value" id="myQuestions">0</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">Taxa de Acerto Média</div>
+                            <div class="stat-value">85%</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <footer class="main-footer">
+                <p>Northern Lights &copy; 2023 - Sistema de Gestão Educacional</p>
+                <p class="footer-links">
+                    <a href="#">Privacidade</a> | 
+                    <a href="#">Termos de Uso</a> | 
+                    <a href="#">Suporte</a>
+                </p>
+            </footer>
+        </main>
+        
+        <!-- Success Modal -->
+        <div class="modal" id="successModal">
+            <div class="modal-content">
+                <div class="modal-icon success">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <h3>Questão Criada com Sucesso!</h3>
+                <p id="successMessage">A questão foi salva e está disponível para uso.</p>
+                <div class="modal-actions">
+                    <button class="btn btn-secondary" id="createAnother">
+                        <i class="fas fa-plus"></i> Criar Outra
+                    </button>
+                    <button class="btn btn-primary" id="viewQuestions">
+                        <i class="fas fa-list"></i> Ver Minhas Questões
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/DashBoardTeacher-ScripOfNavs/scriptCreateQuestion.js"></script>
+</body>
+</html>

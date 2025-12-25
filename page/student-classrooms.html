@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Salas de Aula - Northern Lights</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/teacher-dashboard.css">
+    <style>
+        .classrooms-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+        }
+
+        .classroom-card {
+            background: rgba(30, 41, 59, 0.7);
+            border-radius: 16px;
+            padding: 25px;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .classroom-card:hover {
+            border-color: #3b82f6;
+            transform: translateY(-5px);
+        }
+
+        .classroom-card.past {
+            opacity: 0.7;
+            border-color: #94a3b8;
+        }
+
+        .classroom-card.ongoing {
+            border-color: #10b981;
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
+        }
+
+        .classroom-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 15px;
+        }
+
+        .classroom-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #3b82f6;
+            margin-bottom: 5px;
+        }
+
+        .classroom-description {
+            color: #94a3b8;
+            margin: 10px 0;
+            line-height: 1.6;
+        }
+
+        .classroom-meta {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin: 15px 0;
+            padding: 15px;
+            background: rgba(15, 23, 42, 0.5);
+            border-radius: 8px;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.9rem;
+            color: #f8fafc;
+        }
+
+        .meta-item i {
+            color: #3b82f6;
+            width: 20px;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .status-past {
+            background: rgba(148, 163, 184, 0.2);
+            color: #94a3b8;
+        }
+
+        .status-ongoing {
+            background: rgba(16, 185, 129, 0.2);
+            color: #10b981;
+        }
+
+        .status-upcoming {
+            background: rgba(251, 191, 36, 0.2);
+            color: #fbbf24;
+        }
+
+        .btn-join {
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-top: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn-join:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(59, 130, 246, 0.3);
+        }
+
+        .btn-join:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Mobile Menu Toggle -->
+    <button class="mobile-menu-toggle" id="mobile-menu-toggle">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- Mobile Header Actions -->
+    <div class="mobile-header-actions">
+        <button class="btn btn-secondary" id="mobile-refresh-btn">
+            <i class="fas fa-sync-alt"></i>
+        </button>
+        <button class="btn btn-danger" id="mobile-logout-btn">
+            <i class="fas fa-sign-out-alt"></i>
+        </button>
+    </div>
+
+    <!-- Mobile Overlay -->
+    <div class="mobile-overlay" id="mobile-overlay"></div>
+
+    <div class="dashboard-container">
+        <aside class="sidebar mobile-hidden" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class="fas fa-graduation-cap logo-icon"></i>
+                    <div class="logo-text">Northern Lights</div>
+                </div>
+                <div class="user-info" onclick="openProfileModal()" style="cursor: pointer;">
+                    <div class="user-avatar" id="user-avatar">AL</div>
+                    <div class="user-details">
+                        <div class="user-name" id="user-name">Aluno</div>
+                        <div class="user-role">Estudante</div>
+                    </div>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <div class="nav-title">Principal</div>
+                    <a href="/page/student-dashboard.html">
+                        <div class="nav-item">
+                            <i class="fas fa-chart-bar"></i>
+                            <span>Dashboard</span>
+                        </div>
+                    </a>
+                </div>
+                <div class="nav-section">
+                    <div class="nav-title">Conteúdo</div>
+                    <a href="/page/student-questions.html">
+                        <div class="nav-item">
+                            <i class="fas fa-file-alt"></i>
+                            <span>Questões</span>
+                        </div>
+                    </a>
+                    <a href="/page/student-classrooms.html">
+                        <div class="nav-item active">
+                            <i class="fas fa-video"></i>
+                            <span>Salas de Aula</span>
+                        </div>
+                    </a>
+                </div>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <div class="content-header">
+                <div>
+                    <h1 class="header-title">
+                        <i class="fas fa-video"></i> Salas de Aula
+                    </h1>
+                    <p class="header-subtitle">Acesse os links das aulas e participe das videochamadas</p>
+                </div>
+                <div class="header-actions">
+                    <button class="btn btn-info" onclick="openHelpModal('student-classrooms')" title="Ajuda">
+                        <i class="fas fa-question-circle"></i> Ajuda
+                    </button>
+                    <button class="btn btn-secondary" id="refresh-btn">
+                        <i class="fas fa-sync-alt"></i> Atualizar
+                    </button>
+                    <button class="btn btn-danger" id="logout-btn">
+                        <i class="fas fa-sign-out-alt"></i> Sair
+                    </button>
+                </div>
+            </div>
+
+            <div id="message-container"></div>
+
+            <!-- Tabs Navigation -->
+            <div style="display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 2px solid rgba(255, 255, 255, 0.1);">
+                <button class="tab-btn active" id="live-classes-tab-btn" onclick="switchStudentClassroomTab('live')">
+                    <i class="fas fa-video"></i> Aulas ao Vivo
+                </button>
+                <button class="tab-btn" id="recorded-classes-tab-btn" onclick="switchStudentClassroomTab('recorded')">
+                    <i class="fas fa-film"></i> Galeria de Aulas Gravadas
+                </button>
+            </div>
+
+            <!-- Tab: Aulas ao Vivo -->
+            <div id="live-classes-tab" class="tab-content active">
+                <div class="classrooms-grid" id="classrooms-grid">
+                    <div class="loading">
+                        <i class="fas fa-spinner fa-spin"></i>
+                        <span>Carregando salas de aula...</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab: Galeria de Aulas Gravadas -->
+            <div id="recorded-classes-tab" class="tab-content" style="display: none;">
+                <div class="classrooms-grid" id="student-recorded-classes-grid">
+                    <div class="loading">
+                        <i class="fas fa-spinner fa-spin"></i>
+                        <span>Carregando aulas gravadas...</span>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../js/user-display-manager.js"></script>
+    <script src="../js/auth-service.js"></script>
+    <script type="module" src="../js/student-classrooms-manager.js"></script>
+    <script src="../js/profile-manager.js"></script>
+    <script src="../js/help-manager.js"></script>
+    <script src="../js/common-profile-help.js"></script>
+    <script src="../js/mobile-navbar.js"></script>
+    
+    <!-- Incluir modais -->
+    <div id="profile-modal-container"></div>
+    <div id="help-modal-container"></div>
+    
+    <script>
+        // Carregar modais
+        fetch('../components/profile-modal.html')
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('profile-modal-container').innerHTML = html;
+            })
+            .catch(err => console.error('Erro ao carregar modal de perfil:', err));
+        
+        fetch('../components/help-modal.html')
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('help-modal-container').innerHTML = html;
+            })
+            .catch(err => console.error('Erro ao carregar modal de ajuda:', err));
+    </script>
+    
+    <style>
+        .btn-info {
+            background: rgba(59, 130, 246, 0.2);
+            color: #3b82f6;
+            border: 2px solid rgba(59, 130, 246, 0.3);
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-info:hover {
+            background: rgba(59, 130, 246, 0.3);
+            border-color: #3b82f6;
+            transform: translateY(-2px);
+        }
+        .header-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+    </style>
+</body>
+</html>
+
+

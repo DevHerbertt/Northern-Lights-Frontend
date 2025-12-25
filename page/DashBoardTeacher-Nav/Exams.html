@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciar Provas - Northern Lights</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../../css/teacher-dashboard.css">
+    <style>
+        .exams-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .create-panel, .list-panel {
+            background: rgba(30, 41, 59, 0.7);
+            border-radius: 16px;
+            padding: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #f8fafc;
+        }
+
+        .form-input, .form-textarea {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(15, 23, 42, 0.8);
+            color: #f8fafc;
+            font-size: 1rem;
+        }
+
+        .form-textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .questions-selector {
+            max-height: 300px;
+            overflow-y: auto;
+            background: rgba(15, 23, 42, 0.8);
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .question-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            margin-bottom: 8px;
+            background: rgba(30, 41, 59, 0.5);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .question-checkbox:hover {
+            background: rgba(59, 130, 246, 0.1);
+        }
+
+        .question-checkbox input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .exam-card {
+            background: rgba(15, 23, 42, 0.8);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .exam-card:hover {
+            border-color: #3b82f6;
+            transform: translateY(-2px);
+        }
+
+        .exam-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 15px;
+        }
+
+        .exam-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #3b82f6;
+        }
+
+        .exam-meta {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin: 15px 0;
+            font-size: 0.9rem;
+            color: #94a3b8;
+        }
+
+        .exam-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            flex: 1;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            color: white;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
+        }
+
+        .status-badge {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .status-active {
+            background: rgba(16, 185, 129, 0.2);
+            color: #10b981;
+        }
+
+        .status-inactive {
+            background: rgba(148, 163, 184, 0.2);
+            color: #94a3b8;
+        }
+
+        @media (max-width: 1024px) {
+            .exams-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class="fas fa-graduation-cap logo-icon"></i>
+                    <div class="logo-text">Northern Lights</div>
+                </div>
+                <div class="user-info">
+                    <div class="user-avatar" id="user-avatar">TL</div>
+                    <div class="user-details">
+                        <div class="user-name" id="user-name">Professor</div>
+                        <div class="user-role">Professor</div>
+                    </div>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <div class="nav-title">Principal</div>
+                    <a href="/page/teacher-dashboard.html">
+                        <div class="nav-item">
+                            <i class="fas fa-chart-bar"></i>
+                            <span>Dashboard</span>
+                        </div>
+                    </a>
+                </div>
+                <div class="nav-section">
+                    <div class="nav-title">Conteúdo</div>
+                    <a href="/page/DashBoardTeacher-Nav/Questions.html">
+                        <div class="nav-item">
+                            <i class="fas fa-file-alt"></i>
+                            <span>Questões</span>
+                        </div>
+                    </a>
+                    <a href="/page/DashBoardTeacher-Nav/Exams.html">
+                        <div class="nav-item active">
+                            <i class="fas fa-clipboard-list"></i>
+                            <span>Provas</span>
+                        </div>
+                    </a>
+                    <a href="/page/DashBoardTeacher-Nav/Corrections.html">
+                        <div class="nav-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Correções</span>
+                        </div>
+                    </a>
+                    <a href="/page/DashBoardTeacher-Nav/ClassRoom.html">
+                        <div class="nav-item">
+                            <i class="fas fa-video"></i>
+                            <span>Salas de Aula</span>
+                        </div>
+                    </a>
+                </div>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <div class="content-header">
+                <div>
+                    <h1 class="header-title">
+                        <i class="fas fa-clipboard-list"></i> Gerenciar Provas
+                    </h1>
+                    <p class="header-subtitle">Crie provas selecionando questões existentes</p>
+                </div>
+                <div class="header-actions">
+                    <button class="btn btn-secondary" id="refresh-btn">
+                        <i class="fas fa-sync-alt"></i> Atualizar
+                    </button>
+                    <button class="btn btn-danger" id="logout-btn">
+                        <i class="fas fa-sign-out-alt"></i> Sair
+                    </button>
+                </div>
+            </div>
+
+            <div id="message-container"></div>
+
+            <div class="exams-container">
+                <!-- Painel de Criação -->
+                <div class="create-panel">
+                    <h2 style="margin-bottom: 20px; color: #3b82f6;">
+                        <i class="fas fa-plus-circle"></i> Criar Nova Prova
+                    </h2>
+
+                    <form id="create-exam-form">
+                        <div class="form-group">
+                            <label class="form-label">Título da Prova *</label>
+                            <input 
+                                type="text" 
+                                class="form-input" 
+                                id="exam-title" 
+                                placeholder="Ex: Prova de Inglês - Nível B1"
+                                required
+                            >
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Descrição</label>
+                            <textarea 
+                                class="form-textarea" 
+                                id="exam-description" 
+                                placeholder="Descreva o conteúdo e objetivos da prova..."
+                            ></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Data e Hora de Início *</label>
+                            <input 
+                                type="datetime-local" 
+                                class="form-input" 
+                                id="exam-start" 
+                                required
+                            >
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Data e Hora de Término *</label>
+                            <input 
+                                type="datetime-local" 
+                                class="form-input" 
+                                id="exam-end" 
+                                required
+                            >
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Duração (minutos)</label>
+                            <input 
+                                type="number" 
+                                class="form-input" 
+                                id="exam-duration" 
+                                placeholder="Ex: 60"
+                                min="1"
+                            >
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Pontuação Total</label>
+                            <input 
+                                type="number" 
+                                class="form-input" 
+                                id="exam-score" 
+                                placeholder="Ex: 100"
+                                min="1"
+                            >
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Selecionar Questões *</label>
+                            <div class="questions-selector" id="questions-selector">
+                                <div class="loading">
+                                    <i class="fas fa-spinner fa-spin"></i> Carregando questões...
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 20px;">
+                            <i class="fas fa-save"></i> Criar Prova
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Painel de Lista -->
+                <div class="list-panel">
+                    <h2 style="margin-bottom: 20px; color: #10b981;">
+                        <i class="fas fa-list"></i> Provas Criadas
+                    </h2>
+
+                    <div id="exams-list">
+                        <div class="loading">
+                            <i class="fas fa-spinner fa-spin"></i> Carregando provas...
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../../js/auth-service.js"></script>
+    <script type="module" src="../../js/exams-manager.js"></script>
+</body>
+</html>
+
+
+

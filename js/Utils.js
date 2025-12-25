@@ -1,8 +1,16 @@
 // utils.js
+(function() {
+'use strict';
 
-const API = "http://localhost:8080"; // substitua pelo endpoint real da sua API
+// Declarar API global apenas uma vez
+if (typeof window.API === 'undefined') {
+    window.API = "http://localhost:8080"; // substitua pelo endpoint real da sua API
+}
+// Usar window.API diretamente
+const API = window.API;
 
-export function renderMeets(meets) {
+// Tornar renderMeets global em vez de export
+function renderMeets(meets) {
     // Adiciona CSS se não estiver presente
     if (!document.getElementById('meets-css')) {
         const style = document.createElement('style');
@@ -420,7 +428,7 @@ function openRecordModal(meetId) {
 async function updateMeeting(meetId, recordedLink) {
     try {
         const token = localStorage.getItem("token");
-        const res = await fetch(`${API}/meets/${meetId}`, {
+        const res = await fetch(`${window.API}/meets/${meetId}`, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
@@ -460,7 +468,4 @@ async function updateMeeting(meetId, recordedLink) {
 // Expor função globalmente
 window.renderMeets = renderMeets;
 
-
-async function name(params) {
-    
-}
+})(); // Fechar IIFE

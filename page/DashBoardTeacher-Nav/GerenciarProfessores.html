@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Northern Lights - Gerenciar Professores</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/DashBoardTeacher-StyleofNavs/stylesManageTeachers.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo-container">
+                <div class="logo-icon">
+                    <i class="fas fa-chalkboard-teacher"></i>
+                </div>
+                <h1>NORTHERN LIGHTS</h1>
+                <p class="logo-subtitle">Painel do Administrador</p>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <ul>
+                    <li>
+                        <a href ="/page/teacher-dashboard.html">
+                            <i class="fas fa-tachometer-alt"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/page/DashBoardTeacher-Nav/TeacherCreate.html">
+                            <i class="fas fa-user-plus"></i>
+                            <span>Criar Professor</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            
+           
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="main-header">
+                <h2><i class="fas fa-users"></i> Gerenciar Professores</h2>
+                <div class="header-actions">
+                    <button class="btn btn-secondary" id="refreshBtn">
+                        <i class="fas fa-sync-alt"></i> Atualizar
+                    </button>
+                    <button class="btn btn-primary" id="addTeacherBtn">
+                        <i class="fas fa-user-plus"></i> Novo Professor
+                    </button>
+                </div>
+            </header>
+            
+            <div class="content-wrapper">
+                <!-- Filtros e Busca -->
+                <div class="filters-section">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="searchInput" placeholder="Buscar professor por nome ou e-mail...">
+                    </div>
+                    
+                    <div class="filter-controls">
+                        <select id="filterByAge">
+                            <option value="">Todas as idades</option>
+                            <option value="18-30">18-30 anos</option>
+                            <option value="31-45">31-45 anos</option>
+                            <option value="46-60">46-60 anos</option>
+                            <option value="61-80">61-80 anos</option>
+                        </select>
+                        
+                        <select id="sortBy">
+                            <option value="name-asc">Nome (A-Z)</option>
+                            <option value="name-desc">Nome (Z-A)</option>
+                            <option value="age-asc">Idade (Menor-Maior)</option>
+                            <option value="age-desc">Idade (Maior-Menor)</option>
+                            <option value="newest">Mais Recentes</option>
+                            <option value="oldest">Mais Antigos</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <!-- Tabela de Professores -->
+                <div class="table-container">
+                    <div class="table-header">
+                        <h3>Professores Cadastrados</h3>
+                        <span class="total-count" id="totalCount">Carregando...</span>
+                    </div>
+                    
+                    <div class="table-responsive">
+                        <table id="teachersTable">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nome</th>
+                                    <th>E-mail</th>
+                                    <th>Idade</th>
+                                    <th>Data de Cadastro</th>
+                                    <th>Status</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="teachersTableBody">
+                                <!-- Dados serão carregados via JavaScript -->
+                                <tr>
+                                    <td colspan="7" class="loading-cell">
+                                        <div class="loading-spinner">
+                                            <i class="fas fa-spinner fa-spin"></i> Carregando professores...
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="table-footer">
+                        <div class="pagination-info" id="paginationInfo">
+                            Mostrando 0 de 0 professores
+                        </div>
+                        <div class="pagination-controls">
+                            <button class="btn-pagination" id="prevPage" disabled>
+                                <i class="fas fa-chevron-left"></i> Anterior
+                            </button>
+                            <span class="page-numbers" id="pageNumbers">Página 1</span>
+                            <button class="btn-pagination" id="nextPage" disabled>
+                                Próxima <i class="fas fa-chevron-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <footer class="main-footer">
+                <p>Northern Lights &copy; 2023 - Sistema de Gestão Educacional</p>
+                <p class="footer-links">
+                    <a href="#">Privacidade</a> | 
+                    <a href="#">Termos de Uso</a> | 
+                    <a href="#">Suporte</a>
+                </p>
+            </footer>
+        </main>
+    </div>
+
+    <!-- Modal de Edição -->
+    <div class="modal" id="editModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-edit"></i> Editar Professor</h3>
+                <button class="modal-close" id="closeEditModal">&times;</button>
+            </div>
+            
+            <form id="editTeacherForm">
+                <input type="hidden" id="editTeacherId">
+                
+                <div class="form-group">
+                    <label for="editTeacherName">
+                        <i class="fas fa-user"></i> Nome Completo
+                    </label>
+                    <input type="text" id="editTeacherName" placeholder="Nome do professor" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="editTeacherEmail">
+                        <i class="fas fa-envelope"></i> E-mail
+                    </label>
+                    <input type="email" id="editTeacherEmail" placeholder="professor@northernlights.edu" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="editTeacherAge">
+                        <i class="fas fa-birthday-cake"></i> Idade
+                    </label>
+                    <input type="number" id="editTeacherAge" min="18" max="80" placeholder="30" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="editTeacherClassRoom">
+                        <i class="fas fa-book-open"></i> Disciplinas/Minerações
+                    </label>
+                    <input type="text" id="editTeacherClassRoom" placeholder="Ex: Matemática, Física">
+                </div>
+                
+                <div class="form-group checkbox-group">
+                    <input type="checkbox" id="editResetPassword">
+                    <label for="editResetPassword">
+                        Redefinir senha (será gerada uma senha temporária)
+                    </label>
+                </div>
+                
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" id="cancelEdit">
+                        Cancelar
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Salvar Alterações
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal de Confirmação de Exclusão -->
+    <div class="modal" id="deleteModal">
+        <div class="modal-content">
+            <div class="modal-icon warning">
+                <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <h3>Confirmar Exclusão</h3>
+            <p id="deleteMessage">Tem certeza que deseja excluir este professor? Esta ação não pode ser desfeita.</p>
+            
+            <div class="modal-actions">
+                <button type="button" class="btn btn-secondary" id="cancelDelete">
+                    Cancelar
+                </button>
+                <button type="button" class="btn btn-danger" id="confirmDelete">
+                    <i class="fas fa-trash"></i> Excluir Professor
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Detalhes -->
+    <div class="modal" id="detailsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-info-circle"></i> Detalhes do Professor</h3>
+                <button class="modal-close" id="closeDetailsModal">&times;</button>
+            </div>
+            
+            <div class="teacher-details">
+                <div class="detail-item">
+                    <strong>ID:</strong> <span id="detailId">-</span>
+                </div>
+                <div class="detail-item">
+                    <strong>Nome:</strong> <span id="detailName">-</span>
+                </div>
+                <div class="detail-item">
+                    <strong>E-mail:</strong> <span id="detailEmail">-</span>
+                </div>
+                <div class="detail-item">
+                    <strong>Idade:</strong> <span id="detailAge">-</span>
+                </div>
+                <div class="detail-item">
+                    <strong>Disciplinas:</strong> <span id="detailClassRoom">-</span>
+                </div>
+                <div class="detail-item">
+                    <strong>Data de Cadastro:</strong> <span id="detailCreatedAt">-</span>
+                </div>
+                <div class="detail-item">
+                    <strong>Status:</strong> <span id="detailStatus">-</span>
+                </div>
+            </div>
+            
+            <div class="modal-actions">
+                <button type="button" class="btn btn-primary" id="closeDetails">
+                    Fechar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/DashBoardTeacher-ScripOfNavs/scriptManageTeachers.js"></script>
+</body>
+</html>

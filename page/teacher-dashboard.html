@@ -6,119 +6,6 @@
     <title>Teacher Dashboard - Northern Lights</title>
     <link rel="stylesheet" href="../css/teacher-dashboard.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        /* Mobile Menu Styles */
-        .mobile-menu-toggle {
-            display: none;
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 1000;
-            background: var(--gradient-primary);
-            border: none;
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            color: white;
-            font-size: 1.2rem;
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-        }
-
-        .sidebar.mobile-hidden {
-            transform: translateX(-100%);
-        }
-
-        .sidebar.mobile-visible {
-            transform: translateX(0);
-        }
-
-        .mobile-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.5);
-            z-index: 99;
-        }
-
-        .mobile-overlay.active {
-            display: block;
-        }
-
-        /* Mobile Header Actions */
-        .mobile-header-actions {
-            display: none;
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            z-index: 1000;
-            gap: 10px;
-        }
-
-        .mobile-header-actions .btn {
-            width: auto;
-            padding: 10px 15px;
-            min-height: 44px;
-        }
-
-        /* Responsive adjustments */
-        @media (max-width: 768px) {
-            .mobile-menu-toggle {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-            }
-
-            .mobile-header-actions {
-                display: flex;
-            }
-
-            .header-actions {
-                display: none;
-            }
-
-            .sidebar {
-                position: fixed;
-                height: 100vh;
-                z-index: 100;
-                transition: transform 0.3s ease;
-                transform: translateX(-100%);
-            }
-
-            .main-content {
-                margin-left: 0;
-                padding-top: 80px;
-            }
-
-            .content-header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 15px;
-                margin-top: 20px;
-            }
-
-            .header-title {
-                font-size: 1.5rem;
-            }
-
-            .header-subtitle {
-                font-size: 0.9rem;
-            }
-        }
-
-        @media (min-width: 769px) {
-            .sidebar {
-                transform: translateX(0) !important;
-            }
-            
-            .mobile-overlay {
-                display: none !important;
-            }
-        }
-    </style>
 </head>
 <body>
     <!-- Background Animation -->
@@ -155,7 +42,7 @@
                     <div class="logo-text">Northern Lights</div>
                 </div>
                 
-                <div class="user-info" id="user-profile-btn">
+                <div class="user-info" id="user-profile-btn" onclick="openProfileModal()" style="cursor: pointer;">
                     <div class="user-avatar" id="user-avatar">TL</div>
                     <div class="user-details">
                         <div class="user-name" id="user-name">Teacher Name</div>
@@ -189,10 +76,15 @@
         </div>
         </a>
 
+        <a href="/page/DashBoardTeacher-Nav/Corrections.html">
+        <div class="nav-item" data-tab="corrections">
+            <i class="fas fa-check-circle"></i>
+            <span>Correções</span>
+        </div>
+        </a>
 
         <a href="/page/DashBoardTeacher-Nav/ClassRoom.html">
         <div class="nav-item" data-tab="classrooms">
-            
             <i class="fas fa-video"></i>
             <span>Salas de Aula</span>
         </div>
@@ -207,10 +99,16 @@
         <a href="/page/DashBoardTeacher-Nav/TeacherCreate.html">
         <div class="nav-item" data-tab="teachers">
             <i class="fas fa-users"></i>
-            <span>Professores</span></a>
+            <span>Professores</span>
         </div>
         </a>
 
+        <a href="/page/DashBoardTeacher-Nav/Students.html">
+        <div class="nav-item" data-tab="students">
+            <i class="fas fa-user-graduate"></i>
+            <span>Alunos</span>
+        </div>
+        </a>
 
     </div>
 </nav>
@@ -226,6 +124,9 @@
                     <p class="header-subtitle" id="page-subtitle">Gerencie suas aulas, questões e estudantes</p>
                 </div>
                 <div class="header-actions">
+                    <button class="btn btn-info" onclick="openHelpModal('teacher-dashboard')" title="Ajuda">
+                        <i class="fas fa-question-circle"></i> Ajuda
+                    </button>
                     <button class="btn btn-secondary" id="refresh-btn">
                         <i class="fas fa-sync-alt"></i>
                         Atualizar
@@ -320,10 +221,10 @@
                                     <i class="fas fa-comments"></i>
                                     Ver Respostas
                                 </button>
-                                <button class="btn btn-secondary" data-action="create-teacher">
+                                <a href="/page/DashBoardTeacher-Nav/TeacherCreate.html"><button class="btn btn-secondary" data-action="create-teacher">
                                     <i class="fas fa-user-plus"></i>
                                     Add Professor
-                                </button>
+                                </button></a>
                             </div>
                         </div>
 
@@ -336,8 +237,34 @@
                             </div>
                         </div>
                     </div>
+                    
+                    <!-- Gráfico de Desempenho dos Alunos -->
+                    <div class="content-section" style="margin-top: 30px;">
+                        <div class="section-header" style="display: flex; justify-content: space-between; align-items: center;">
+                            <h2 class="section-title">Desempenho dos Alunos</h2>
+                            <button class="btn-fullscreen" onclick="toggleFullscreenTeacher('students-performance-chart')" title="Tela cheia">
+                                <i class="fas fa-expand"></i>
+                            </button>
+                        </div>
+                        <div style="position: relative; height: 400px; margin-top: 20px;">
+                            <canvas id="students-performance-chart"></canvas>
+                        </div>
+                    </div>
                 </div>
-                        <form id="teacher-form">
+                
+                <!-- Modal Fullscreen para Gráfico -->
+                <div id="fullscreen-modal-teacher" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.95); z-index: 10000; padding: 20px; overflow: auto;">
+                    <div style="max-width: 1200px; margin: 0 auto; background: rgba(30, 41, 59, 0.9); border-radius: 16px; padding: 30px; position: relative;">
+                        <button onclick="closeFullscreenTeacher()" style="position: absolute; top: 20px; right: 20px; background: rgba(239, 68, 68, 0.8); border: none; color: white; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; font-size: 1.2rem; display: flex; align-items: center; justify-content: center;">
+                            <i class="fas fa-times"></i>
+                        </button>
+                        <h2 id="fullscreen-title-teacher" style="color: #f8fafc; margin-bottom: 20px;">Desempenho dos Alunos</h2>
+                        <div style="position: relative; height: 70vh; min-height: 500px;">
+                            <canvas id="fullscreen-chart-teacher"></canvas>
+                        </div>
+                    </div>
+                </div>
+                        <form style="visibility: hidden;" id="teacher-form">
                             <div class="form-group">
                               <input type="text" class="form-input" id="teacher-name" 
                                        placeholder="Digite o nome do professor..." required>
@@ -348,8 +275,34 @@
             </div>
         </main>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="../js/auth-service.js"></script>
-    <script type="module" src="/js/DashBoardManager.js"></script>
+    <script src="../js/user-display-manager.js"></script>
+    <script src="../js/Utils.js"></script>
+    <script src="../js/DashBoardManager.js"></script>
+    <script src="../js/profile-manager.js"></script>
+    <script src="../js/help-manager.js"></script>
+    
+    <!-- Incluir modais -->
+    <div id="profile-modal-container"></div>
+    <div id="help-modal-container"></div>
+    
+    <script>
+        // Carregar modais
+        fetch('../components/profile-modal.html')
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('profile-modal-container').innerHTML = html;
+            })
+            .catch(err => console.error('Erro ao carregar modal de perfil:', err));
+        
+        fetch('../components/help-modal.html')
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('help-modal-container').innerHTML = html;
+            })
+            .catch(err => console.error('Erro ao carregar modal de ajuda:', err));
+    </script>
     
     <script>
         // Mobile Menu Functionality
@@ -362,15 +315,15 @@
             const refreshBtn = document.getElementById('refresh-btn');
             const logoutBtn = document.getElementById('logout-btn');
 
-            // Toggle mobile menu
+            // Toggle mobile menu - Melhorado
             function toggleMobileMenu() {
-                sidebar.classList.toggle('mobile-visible');
-                sidebar.classList.toggle('mobile-hidden');
+                sidebar.classList.toggle('mobile-open');
                 mobileOverlay.classList.toggle('active');
+                mobileMenuToggle.classList.toggle('active');
                 
                 // Change icon
                 const icon = mobileMenuToggle.querySelector('i');
-                if (sidebar.classList.contains('mobile-visible')) {
+                if (sidebar.classList.contains('mobile-open')) {
                     icon.className = 'fas fa-times';
                 } else {
                     icon.className = 'fas fa-bars';
@@ -379,10 +332,12 @@
 
             // Close mobile menu
             function closeMobileMenu() {
-                sidebar.classList.remove('mobile-visible');
-                sidebar.classList.add('mobile-hidden');
+                sidebar.classList.remove('mobile-open');
                 mobileOverlay.classList.remove('active');
-                mobileMenuToggle.querySelector('i').className = 'fas fa-bars';
+                mobileMenuToggle.classList.remove('active');
+                if (mobileMenuToggle.querySelector('i')) {
+                    mobileMenuToggle.querySelector('i').className = 'fas fa-bars';
+                }
             }
 
             // Event listeners
@@ -395,10 +350,23 @@
                 closeMobileMenu();
             });
 
-            mobileLogoutBtn.addEventListener('click', function() {
-                logoutBtn.click();
-                closeMobileMenu();
-            });
+            if (mobileLogoutBtn && logoutBtn) {
+                mobileLogoutBtn.addEventListener('click', function() {
+                    console.log('🚪 Mobile logout clicado');
+                    localStorage.removeItem('token');
+                    localStorage.removeItem('user');
+                    window.location.href = '/page/login.html';
+                });
+            }
+            
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', function() {
+                    console.log('🚪 Logout clicado');
+                    localStorage.removeItem('token');
+                    localStorage.removeItem('user');
+                    window.location.href = '/page/login.html';
+                });
+            }
 
             // Close menu when clicking on nav items
             document.querySelectorAll('.nav-item').forEach(item => {

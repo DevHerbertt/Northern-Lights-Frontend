@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minhas Respostas - Northern Lights</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/teacher-dashboard.css">
+    <style>
+        .answers-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .answers-by-date {
+            margin-bottom: 40px;
+        }
+
+        .date-header {
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .date-header h2 {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+
+        .date-stats {
+            display: flex;
+            gap: 20px;
+            font-size: 0.9rem;
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .answer-item {
+            background: rgba(30, 41, 59, 0.7);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .answer-item:hover {
+            border-color: #3b82f6;
+            transform: translateY(-2px);
+        }
+
+        .answer-item.correct {
+            border-left: 4px solid #10b981;
+        }
+
+        .answer-item.incorrect {
+            border-left: 4px solid #ef4444;
+        }
+
+        .answer-item.pending {
+            border-left: 4px solid #fbbf24;
+        }
+
+        .answer-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 15px;
+        }
+
+        .answer-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #3b82f6;
+            margin: 0;
+        }
+
+        .answer-status {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .answer-status.correct {
+            background: rgba(16, 185, 129, 0.2);
+            color: #10b981;
+        }
+
+        .answer-status.incorrect {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+        }
+
+        .answer-status.pending {
+            background: rgba(251, 191, 36, 0.2);
+            color: #fbbf24;
+        }
+
+        .question-info {
+            margin-bottom: 15px;
+            color: #94a3b8;
+            font-size: 0.9rem;
+        }
+
+        .answer-text {
+            background: rgba(15, 23, 42, 0.8);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            color: #f8fafc;
+            white-space: pre-wrap;
+        }
+
+        .correction-info {
+            background: rgba(16, 185, 129, 0.1);
+            border-left: 4px solid #10b981;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+
+        .correction-grade {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #10b981;
+            margin-bottom: 10px;
+        }
+
+        .correction-feedback {
+            color: #f8fafc;
+            line-height: 1.6;
+            white-space: pre-wrap;
+        }
+
+        .no-correction {
+            color: #94a3b8;
+            font-style: italic;
+            margin-top: 15px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #94a3b8;
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            color: #475569;
+        }
+
+        /* Tabs Styles */
+        .tab-btn {
+            padding: 12px 24px;
+            background: rgba(255, 255, 255, 0.05);
+            border: none;
+            border-bottom: 3px solid transparent;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tab-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .tab-btn.active {
+            background: rgba(59, 130, 246, 0.2);
+            color: #3b82f6;
+            border-bottom-color: #3b82f6;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Weekly Grade Styles */
+        .weekly-grade-card {
+            background: linear-gradient(135deg, rgba(20, 184, 166, 0.1), rgba(59, 130, 246, 0.1));
+            border: 2px solid rgba(20, 184, 166, 0.3);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 20px;
+        }
+
+        .grade-display {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .grade-value {
+            font-size: 64px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #14b8a6, #3b82f6);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 10px 0;
+        }
+
+        .week-info {
+            background: rgba(59, 130, 246, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 4px solid #3b82f6;
+        }
+
+        .feedback-box {
+            background: rgba(139, 92, 246, 0.1);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 4px solid #8b5cf6;
+        }
+    </style>
+</head>
+<body>
+    <!-- Mobile Menu Toggle -->
+    <button class="mobile-menu-toggle" id="mobile-menu-toggle">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- Mobile Header Actions -->
+    <div class="mobile-header-actions">
+        <button class="btn btn-secondary" id="mobile-refresh-btn">
+            <i class="fas fa-sync-alt"></i>
+        </button>
+        <button class="btn btn-danger" id="mobile-logout-btn">
+            <i class="fas fa-sign-out-alt"></i>
+        </button>
+    </div>
+
+    <!-- Mobile Overlay -->
+    <div class="mobile-overlay" id="mobile-overlay"></div>
+
+    <div class="dashboard-container">
+        <aside class="sidebar mobile-hidden" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class="fas fa-graduation-cap logo-icon"></i>
+                    <div class="logo-text">Northern Lights</div>
+                </div>
+                <div class="user-info" onclick="openProfileModal()" style="cursor: pointer;">
+                    <div class="user-avatar" id="user-avatar">AL</div>
+                    <div class="user-details">
+                        <div class="user-name" id="user-name">Aluno</div>
+                        <div class="user-role">Estudante</div>
+                    </div>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <div class="nav-title">Principal</div>
+                    <a href="/page/student-dashboard.html">
+                        <div class="nav-item">
+                            <i class="fas fa-chart-bar"></i>
+                            <span>Dashboard</span>
+                        </div>
+                    </a>
+                </div>
+                <div class="nav-section">
+                    <div class="nav-title">Conteúdo</div>
+                    <a href="/page/student-questions.html">
+                        <div class="nav-item">
+                            <i class="fas fa-file-alt"></i>
+                            <span>Questões</span>
+                        </div>
+                    </a>
+                    <a href="/page/student-answers-review.html">
+                        <div class="nav-item active">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Minhas Respostas</span>
+                        </div>
+                    </a>
+                    <a href="/page/student-classrooms.html">
+                        <div class="nav-item">
+                            <i class="fas fa-video"></i>
+                            <span>Salas de Aula</span>
+                        </div>
+                    </a>
+                </div>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <div class="content-header">
+                <div>
+                    <h1 class="header-title">
+                        <i class="fas fa-check-circle"></i> Minhas Respostas
+                    </h1>
+                    <p class="header-subtitle">Visualize suas respostas e notas semanais</p>
+                </div>
+                <div class="header-actions">
+                    <button class="btn btn-info" onclick="openHelpModal('student-answers')" title="Ajuda">
+                        <i class="fas fa-question-circle"></i> Ajuda
+                    </button>
+                    <button class="btn btn-secondary" id="refresh-btn">
+                        <i class="fas fa-sync-alt"></i> Atualizar
+                    </button>
+                    <button class="btn btn-danger" id="logout-btn">
+                        <i class="fas fa-sign-out-alt"></i> Sair
+                    </button>
+                </div>
+            </div>
+
+            <div id="message-container"></div>
+
+            <!-- Tabs Navigation -->
+            <div style="display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 2px solid rgba(255, 255, 255, 0.1);">
+                <button class="tab-btn active" id="answers-tab-btn" onclick="switchTab('answers')">
+                    <i class="fas fa-check-circle"></i> Minhas Respostas
+                </button>
+                    <button class="tab-btn" id="weekly-grade-tab-btn" onclick="switchTab('weekly-grade')">
+                        <i class="fas fa-star"></i> Minha Nota da Semana
+                    </button>
+                    <button class="tab-btn" id="exam-grade-tab-btn" onclick="switchTab('exam-grade')">
+                        <i class="fas fa-book"></i> Minhas Notas de Prova
+                    </button>
+                </div>
+
+            <!-- Tab: Minhas Respostas -->
+            <div id="answers-tab" class="tab-content active">
+                <div class="info-banner" style="background: rgba(251, 191, 36, 0.1); border-left: 4px solid #fbbf24; padding: 15px; border-radius: 8px; margin-bottom: 20px; color: #f8fafc;">
+                    <div style="display: flex; align-items: start; gap: 12px;">
+                        <i class="fas fa-info-circle" style="color: #fbbf24; font-size: 1.2rem; margin-top: 2px;"></i>
+                        <div>
+                            <strong style="color: #fbbf24;">Importante:</strong>
+                            <p style="margin: 5px 0 0 0; line-height: 1.6;">
+                                Questões de <strong>múltipla escolha</strong> são corrigidas automaticamente após a data de expiração. 
+                                Questões de <strong>texto/escrita</strong> só aparecerão aqui após serem corrigidas manualmente pelo professor.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="answers-container">
+                    <div id="answers-view">
+                        <div class="loading">
+                            <i class="fas fa-spinner fa-spin"></i>
+                            <span>Carregando suas respostas...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab: Minha Nota da Semana -->
+            <div id="weekly-grade-tab" class="tab-content" style="display: none;">
+                <div id="weekly-grade-view">
+                    <div class="loading">
+                        <i class="fas fa-spinner fa-spin"></i>
+                        <span>Carregando sua nota da semana...</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab: Minhas Notas de Prova -->
+            <div id="exam-grade-tab" class="tab-content" style="display: none;">
+                <div id="exam-grade-view">
+                    <div class="loading">
+                        <i class="fas fa-spinner fa-spin"></i>
+                        <span>Carregando suas notas de prova...</span>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../js/user-display-manager.js"></script>
+    <script src="../js/auth-service.js"></script>
+    <script type="module" src="../js/student-answers-review-manager.js"></script>
+    <script src="../js/profile-manager.js"></script>
+    <script src="../js/help-manager.js"></script>
+    <script src="../js/common-profile-help.js"></script>
+    
+    <!-- Incluir modais -->
+    <div id="profile-modal-container"></div>
+    <div id="help-modal-container"></div>
+    
+    <script>
+        // Carregar modais
+        fetch('../components/profile-modal.html')
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('profile-modal-container').innerHTML = html;
+            })
+            .catch(err => console.error('Erro ao carregar modal de perfil:', err));
+        
+        fetch('../components/help-modal.html')
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('help-modal-container').innerHTML = html;
+            })
+            .catch(err => console.error('Erro ao carregar modal de ajuda:', err));
+    </script>
+    
+    <style>
+        .btn-info {
+            background: rgba(59, 130, 246, 0.2);
+            color: #3b82f6;
+            border: 2px solid rgba(59, 130, 246, 0.3);
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-info:hover {
+            background: rgba(59, 130, 246, 0.3);
+            border-color: #3b82f6;
+            transform: translateY(-2px);
+        }
+        .header-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+    </style>
+</body>
+</html>
+
