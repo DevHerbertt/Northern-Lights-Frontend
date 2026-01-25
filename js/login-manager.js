@@ -120,8 +120,8 @@ class LoginManager {
 
     redirectUser(role) {
         const dashboardUrl = role?.toUpperCase() === 'TEACHER'
-            ? 'teacher-dashboard.html'
-            : 'student-dashboard.html';
+            ? '/page/teacher-dashboard.html'
+            : '/page/student-dashboard.html';
 
             
         console.log(`🔄 Redirecionando para: ${dashboardUrl}`);
@@ -209,7 +209,7 @@ class LoginManager {
     }
 
     goBack() {
-        window.location.href = 'index.html';
+        window.location.href = '/page/index.html';
     }
 }
 

@@ -19,10 +19,8 @@ document.addEventListener('DOMContentLoaded', function() {
         profileContainer.id = 'profile-modal-container';
         document.body.appendChild(profileContainer);
         
-        // Determinar caminho correto baseado na URL atual
-        const currentPath = window.location.pathname;
-        const isSubPage = currentPath.includes('/DashBoardTeacher-Nav/') || currentPath.includes('/DashBoardStudent-Nav/');
-        const modalPath = isSubPage ? '../../components/profile-modal.html' : '../components/profile-modal.html';
+        // Usar caminho absoluto
+        const modalPath = '/components/profile-modal.html';
         
         fetch(modalPath)
             .then(response => {
@@ -42,10 +40,8 @@ document.addEventListener('DOMContentLoaded', function() {
         helpContainer.id = 'help-modal-container';
         document.body.appendChild(helpContainer);
         
-        // Determinar caminho correto baseado na URL atual
-        const currentPath = window.location.pathname;
-        const isSubPage = currentPath.includes('/DashBoardTeacher-Nav/') || currentPath.includes('/DashBoardStudent-Nav/');
-        const modalPath = isSubPage ? '../../components/help-modal.html' : '../components/help-modal.html';
+        // Usar caminho absoluto
+        const modalPath = '/components/help-modal.html';
         
         fetch(modalPath)
             .then(response => {

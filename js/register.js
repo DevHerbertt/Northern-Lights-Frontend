@@ -177,7 +177,7 @@ class RegisterManager {
             
             // Redirecionar para login após sucesso
             setTimeout(() => {
-                window.location.href = `login.html?registered=true&message=${encodeURIComponent("Conta criada com sucesso! Faça login para continuar.")}`;
+                window.location.href = `/page/login.html?registered=true&message=${encodeURIComponent("Conta criada com sucesso! Faça login para continuar.")}`;
             }, 2000);
             
         } catch (error) {
@@ -264,7 +264,7 @@ class RegisterManager {
     }
 
     goBack() {
-        window.location.href = 'login.html';
+        window.location.href = '/page/login.html';
     }
 }
 

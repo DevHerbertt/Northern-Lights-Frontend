@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Minhas Respostas - Northern Lights</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="../css/teacher-dashboard.css">
+    <link rel="stylesheet" href="/css/teacher-dashboard.css">
     <style>
         .answers-container {
             max-width: 1200px;
@@ -390,12 +390,12 @@
         </main>
     </div>
 
-    <script src="../js/user-display-manager.js"></script>
-    <script src="../js/auth-service.js"></script>
-    <script type="module" src="../js/student-answers-review-manager.js"></script>
-    <script src="../js/profile-manager.js"></script>
-    <script src="../js/help-manager.js"></script>
-    <script src="../js/common-profile-help.js"></script>
+    <script src="/js/user-display-manager.js"></script>
+    <script src="/js/auth-service.js"></script>
+    <script type="module" src="/js/student-answers-review-manager.js"></script>
+    <script src="/js/profile-manager.js"></script>
+    <script src="/js/help-manager.js"></script>
+    <script src="/js/common-profile-help.js"></script>
     
     <!-- Incluir modais -->
     <div id="profile-modal-container"></div>
@@ -403,14 +403,14 @@
     
     <script>
         // Carregar modais
-        fetch('../components/profile-modal.html')
+        fetch('/components/profile-modal.html')
             .then(response => response.text())
             .then(html => {
                 document.getElementById('profile-modal-container').innerHTML = html;
             })
             .catch(err => console.error('Erro ao carregar modal de perfil:', err));
         
-        fetch('../components/help-modal.html')
+        fetch('/components/help-modal.html')
             .then(response => response.text())
             .then(html => {
                 document.getElementById('help-modal-container').innerHTML = html;

@@ -429,3 +429,6 @@ window.closeRecordedClassModal = closeRecordedClassModal;
 
 
 
+
+
+
