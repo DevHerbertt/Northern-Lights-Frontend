@@ -201,21 +201,46 @@ async function loadTeachers() {
         
         console.log('📡 Resposta recebida:', response.status, response.statusText);
         
-        if (response.status === 401 || response.status === 403) {
-            // Token inválido ou sem permissão
+        if (response.status === 401) {
+            // Token inválido ou expirado - redirecionar para login
             const errorText = await response.text();
-            console.error('❌ Erro de autenticação:', response.status, errorText);
+            console.error('❌ Erro 401 - Token inválido:', errorText);
             
             // Limpar dados de autenticação
             localStorage.removeItem('token');
             localStorage.removeItem('user');
             
-            showError('Sessão expirada ou sem permissão. Faça login novamente.');
+            showError('Sessão expirada. Faça login novamente.');
             
-            // Redirecionar para login após 2 segundos
+            // Redirecionar para login após 3 segundos
             setTimeout(() => {
                 window.location.href = '/page/login.html';
-            }, 2000);
+            }, 3000);
+            return;
+        }
+        
+        if (response.status === 403) {
+            // Erro 403 - pode ser CORS, permissões ou token sem permissão
+            const errorText = await response.text();
+            console.error('❌ Erro 403 - Acesso negado:', errorText);
+            console.warn('⚠️ Possíveis causas: CORS não configurado no backend, usuário sem permissão, ou token inválido');
+            
+            // Não redirecionar imediatamente - mostrar erro e dar opção de tentar novamente
+            showError(`Acesso negado (403). Possíveis causas:
+            <br>• CORS não configurado no backend
+            <br>• Usuário sem permissão para acessar este recurso
+            <br>• Token sem as permissões necessárias
+            <br><br>Verifique o console para mais detalhes.`);
+            
+            // Não redirecionar automaticamente - deixar o usuário decidir
+            // Se quiser forçar logout, descomente as linhas abaixo:
+            /*
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            setTimeout(() => {
+                window.location.href = '/page/login.html';
+            }, 5000);
+            */
             return;
         }
         
