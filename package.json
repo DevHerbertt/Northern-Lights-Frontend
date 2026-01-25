@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "Northern Lights - Frontend Application",
   "scripts": {
-    "build": "echo 'No build step required for static site'"
+    "build": "echo 'No build step required for static site'",
+    "start": "echo 'Static site - no server needed'"
   },
   "repository": {
     "type": "git",
