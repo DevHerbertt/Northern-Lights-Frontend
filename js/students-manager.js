@@ -131,9 +131,23 @@ async function loadStudents() {
             throw new Error(`Erro ao carregar questões: ${questionsResponse.status} ${errorText || questionsResponse.statusText}`);
         }
 
-        const allQuestions = await questionsResponse.json();
+        // Tentar obter questões apenas se a resposta foi OK
+        let allQuestions = [];
+        if (questionsResponse.ok) {
+            try {
+                allQuestions = await questionsResponse.json();
+                console.log('✅ Questões carregadas:', allQuestions.length);
+            } catch (e) {
+                console.warn('⚠️ Erro ao fazer parse das questões:', e);
+                allQuestions = [];
+            }
+        } else {
+            console.warn('⚠️ Não foi possível carregar questões, continuando com lista vazia');
+            allQuestions = [];
+        }
 
         // Buscar todas as respostas
+        console.log('🔍 DEBUG: Buscando respostas em:', `${API}/answers`);
         const answersResponse = await fetch(`${API}/answers`, {
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -141,11 +155,57 @@ async function loadStudents() {
             }
         });
 
-        if (!answersResponse.ok) {
-            throw new Error('Erro ao carregar respostas');
+        console.log('🔍 DEBUG: Resposta de respostas:', answersResponse.status, answersResponse.statusText);
+
+        if (answersResponse.status === 401) {
+            // Token inválido ou expirado
+            console.error('❌ Erro 401 - Token inválido ao buscar respostas');
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            container.innerHTML = `
+                <div class="empty-state">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <h3>Sessão expirada</h3>
+                    <p>Faça login novamente</p>
+                </div>
+            `;
+            setTimeout(() => {
+                window.location.href = '/page/login.html';
+            }, 2000);
+            return;
         }
 
-        const allAnswers = await answersResponse.json();
+        if (answersResponse.status === 403) {
+            // Erro 403 - pode ser CORS ou permissões
+            let errorText = '';
+            try {
+                errorText = await answersResponse.text();
+            } catch (e) {
+                errorText = 'Não foi possível ler a mensagem de erro';
+            }
+            
+            console.error('❌ Erro 403 ao buscar respostas:', errorText);
+            console.warn('⚠️ Continuando sem respostas - lista de alunos será exibida sem dados de respostas');
+        } else if (!answersResponse.ok) {
+            const errorText = await answersResponse.text();
+            console.error('❌ Erro ao carregar respostas:', answersResponse.status, errorText);
+            throw new Error(`Erro ao carregar respostas: ${answersResponse.status} ${errorText || answersResponse.statusText}`);
+        }
+
+        // Tentar obter respostas apenas se a resposta foi OK
+        let allAnswers = [];
+        if (answersResponse.ok) {
+            try {
+                allAnswers = await answersResponse.json();
+                console.log('✅ Respostas carregadas:', allAnswers.length);
+            } catch (e) {
+                console.warn('⚠️ Erro ao fazer parse das respostas:', e);
+                allAnswers = [];
+            }
+        } else {
+            console.warn('⚠️ Não foi possível carregar respostas, continuando com lista vazia');
+            allAnswers = [];
+        }
 
         if (!students || students.length === 0) {
             console.warn('⚠️ Nenhum aluno encontrado');
