@@ -233,26 +233,64 @@ async function loadTeachers() {
         
         if (response.status === 403) {
             // Erro 403 - pode ser CORS, permissões ou token sem permissão
-            const errorText = await response.text();
-            console.error('❌ Erro 403 - Acesso negado:', errorText);
-            console.warn('⚠️ Possíveis causas: CORS não configurado no backend, usuário sem permissão, ou token inválido');
+            let errorText = '';
+            try {
+                errorText = await response.text();
+            } catch (e) {
+                errorText = 'Não foi possível ler a mensagem de erro';
+            }
             
-            // Não redirecionar imediatamente - mostrar erro e dar opção de tentar novamente
-            showError(`Acesso negado (403). Possíveis causas:
-            <br>• CORS não configurado no backend
-            <br>• Usuário sem permissão para acessar este recurso
-            <br>• Token sem as permissões necessárias
-            <br><br>Verifique o console para mais detalhes.`);
+            // Obter dados do usuário para debug
+            const user = JSON.parse(localStorage.getItem('user') || 'null');
+            
+            console.error('❌ Erro 403 - Acesso negado');
+            console.error('📝 Mensagem do servidor:', errorText);
+            console.error('🔑 Token usado:', token.substring(0, 30) + '...');
+            console.error('👤 Usuário:', user);
+            console.error('👤 Role do usuário:', user?.role);
+            console.error('🌐 URL da requisição:', `${API_BASE_URL}/teachers`);
+            console.error('📤 Headers enviados:', {
+                'Authorization': `Bearer ${token.substring(0, 20)}...`,
+                'Content-Type': 'application/json'
+            });
+            console.warn('⚠️ Possíveis causas:');
+            console.warn('  1. CORS não configurado no backend para aceitar requisições do Vercel');
+            console.warn('  2. Usuário sem permissão (role) para acessar /teachers');
+            console.warn('  3. Token válido mas sem as permissões necessárias');
+            console.warn('  4. Endpoint /teachers requer autenticação específica');
+            
+            // Verificar se é erro de CORS
+            const corsHeaders = response.headers.get('Access-Control-Allow-Origin');
+            if (!corsHeaders) {
+                console.error('🚫 ERRO DE CORS DETECTADO: Backend não está enviando header Access-Control-Allow-Origin');
+            } else {
+                console.log('✅ CORS configurado:', corsHeaders);
+            }
+            
+            // Mostrar mensagem de erro mais detalhada
+            const errorMessage = `
+                <div style="text-align: left; padding: 20px;">
+                    <h3 style="color: #ff6b6b; margin-bottom: 15px;">
+                        <i class="fas fa-exclamation-triangle"></i> Erro 403 - Acesso Negado
+                    </h3>
+                    <p><strong>Possíveis causas:</strong></p>
+                    <ul style="text-align: left; margin-left: 20px;">
+                        <li>CORS não configurado no backend para aceitar requisições do Vercel</li>
+                        <li>Usuário sem permissão (role: ${user?.role || 'N/A'}) para acessar este recurso</li>
+                        <li>Token válido mas sem as permissões necessárias</li>
+                        <li>Endpoint requer autenticação específica</li>
+                    </ul>
+                    <p style="margin-top: 15px;"><strong>Mensagem do servidor:</strong></p>
+                    <pre style="background: rgba(0,0,0,0.1); padding: 10px; border-radius: 5px; overflow-x: auto; font-size: 0.85em;">${errorText || 'Nenhuma mensagem'}</pre>
+                    <p style="margin-top: 15px; color: #666; font-size: 0.9em;">
+                        <i class="fas fa-info-circle"></i> Verifique o console (F12) para mais detalhes.
+                    </p>
+                </div>
+            `;
+            
+            showError(errorMessage);
             
             // Não redirecionar automaticamente - deixar o usuário decidir
-            // Se quiser forçar logout, descomente as linhas abaixo:
-            /*
-            localStorage.removeItem('token');
-            localStorage.removeItem('user');
-            setTimeout(() => {
-                window.location.href = '/page/login.html';
-            }, 5000);
-            */
             return;
         }
         
