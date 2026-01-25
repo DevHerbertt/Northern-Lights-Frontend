@@ -1,4 +1,8 @@
 {
+  "version": 2,
+  "public": true,
+  "cleanUrls": true,
+  "trailingSlash": false,
   "rewrites": [
     {
       "source": "/",
@@ -11,6 +15,26 @@
     {
       "source": "/register",
       "destination": "/page/register.html"
+    },
+    {
+      "source": "/page/(.*)",
+      "destination": "/page/$1"
+    },
+    {
+      "source": "/css/(.*)",
+      "destination": "/css/$1"
+    },
+    {
+      "source": "/js/(.*)",
+      "destination": "/js/$1"
+    },
+    {
+      "source": "/img/(.*)",
+      "destination": "/img/$1"
+    },
+    {
+      "source": "/components/(.*)",
+      "destination": "/components/$1"
     }
   ],
   "headers": [

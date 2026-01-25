@@ -1,0 +1,20 @@
+{
+  "name": "northern-lights-frontend",
+  "version": "1.0.0",
+  "description": "Northern Lights - Frontend Application",
+  "scripts": {
+    "build": "echo 'No build step required for static site'"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DevHerbertt/Northern-Lights-Frontend.git"
+  },
+  "keywords": [
+    "education",
+    "english",
+    "learning"
+  ],
+  "author": "",
+  "license": "ISC"
+}
+
