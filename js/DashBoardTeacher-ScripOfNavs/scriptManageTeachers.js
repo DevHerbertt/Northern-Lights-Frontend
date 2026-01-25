@@ -190,16 +190,28 @@ async function loadTeachers() {
         }
         
         console.log('🔐 Token encontrado, fazendo requisição para:', `${API_BASE_URL}/teachers`);
+        console.log('🔑 Token preview:', token.substring(0, 20) + '...');
+        
+        // Verificar dados do usuário
+        const user = JSON.parse(localStorage.getItem('user') || 'null');
+        console.log('👤 Usuário:', user);
+        console.log('👤 Role do usuário:', user?.role);
+        
+        const headers = {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        };
+        
+        console.log('📤 Headers da requisição:', headers);
+        console.log('🌐 URL completa:', `${API_BASE_URL}/teachers`);
         
         const response = await fetch(`${API_BASE_URL}/teachers`, {
             method: 'GET',
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json'
-            }
+            headers: headers
         });
         
         console.log('📡 Resposta recebida:', response.status, response.statusText);
+        console.log('📡 Headers da resposta:', Object.fromEntries(response.headers.entries()));
         
         if (response.status === 401) {
             // Token inválido ou expirado - redirecionar para login
