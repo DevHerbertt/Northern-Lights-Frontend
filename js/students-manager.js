@@ -82,6 +82,7 @@ async function loadStudents() {
         console.log('🔍 DEBUG: Alunos recebidos:', students.length, students);
 
         // Buscar todas as questões
+        console.log('🔍 DEBUG: Buscando questões em:', `${API}/questions`);
         const questionsResponse = await fetch(`${API}/questions`, {
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -89,8 +90,45 @@ async function loadStudents() {
             }
         });
 
-        if (!questionsResponse.ok) {
-            throw new Error('Erro ao carregar questões');
+        console.log('🔍 DEBUG: Resposta de questões:', questionsResponse.status, questionsResponse.statusText);
+
+        if (questionsResponse.status === 401) {
+            // Token inválido ou expirado
+            console.error('❌ Erro 401 - Token inválido ao buscar questões');
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            container.innerHTML = `
+                <div class="empty-state">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <h3>Sessão expirada</h3>
+                    <p>Faça login novamente</p>
+                </div>
+            `;
+            setTimeout(() => {
+                window.location.href = '/page/login.html';
+            }, 2000);
+            return;
+        }
+
+        if (questionsResponse.status === 403) {
+            // Erro 403 - pode ser CORS ou permissões
+            let errorText = '';
+            try {
+                errorText = await questionsResponse.text();
+            } catch (e) {
+                errorText = 'Não foi possível ler a mensagem de erro';
+            }
+            
+            console.error('❌ Erro 403 ao buscar questões:', errorText);
+            console.warn('⚠️ Possíveis causas: CORS não configurado, usuário sem permissão, ou endpoint protegido');
+            
+            // Continuar mesmo com erro 403 - questões podem não ser essenciais para listar alunos
+            console.warn('⚠️ Continuando sem questões - lista de alunos será exibida sem dados de questões');
+            // Não lançar erro, apenas logar e continuar
+        } else if (!questionsResponse.ok) {
+            const errorText = await questionsResponse.text();
+            console.error('❌ Erro ao carregar questões:', questionsResponse.status, errorText);
+            throw new Error(`Erro ao carregar questões: ${questionsResponse.status} ${errorText || questionsResponse.statusText}`);
         }
 
         const allQuestions = await questionsResponse.json();
