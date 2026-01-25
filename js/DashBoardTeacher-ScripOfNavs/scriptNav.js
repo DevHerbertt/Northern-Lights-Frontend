@@ -1,6 +1,20 @@
 // ========== CONFIGURAÇÃO GLOBAL ==========
-// Usar API configurada em config.js
-const API_BASE_URL = window.API || window.API_BASE_URL || 'http://localhost:8080';
+// Função para obter a URL da API (aguarda config.js se necessário)
+function getApiBaseUrl() {
+    // Se config.js já foi carregado, usa a URL configurada
+    if (window.API || window.API_BASE_URL) {
+        return window.API || window.API_BASE_URL;
+    }
+    // Se não, detecta ambiente manualmente
+    const isProduction = window.location.hostname !== 'localhost' && 
+                         window.location.hostname !== '127.0.0.1' &&
+                         !window.location.hostname.startsWith('192.168.');
+    return isProduction 
+        ? 'https://northern-lights-api.onrender.com'
+        : 'http://localhost:8080';
+}
+
+const API_BASE_URL = getApiBaseUrl();
 
 document.addEventListener('DOMContentLoaded', function() {
     // Elementos do DOM
