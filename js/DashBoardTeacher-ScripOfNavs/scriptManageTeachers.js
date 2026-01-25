@@ -19,7 +19,34 @@ const teachersPerPage = 10;
 let teacherToDelete = null;
 
 // Elementos do DOM
+// Verificar autenticação antes de carregar a página
+function checkAuth() {
+    const token = localStorage.getItem('token');
+    const user = JSON.parse(localStorage.getItem('user') || 'null');
+    
+    if (!token || !user) {
+        console.warn('⚠️ Usuário não autenticado, redirecionando para login...');
+        window.location.href = '/page/login.html';
+        return false;
+    }
+    
+    // Verificar se o usuário tem permissão (deve ser TEACHER ou ADMIN)
+    if (user.role !== 'TEACHER' && user.role !== 'ADMIN') {
+        console.warn('⚠️ Usuário sem permissão para acessar esta página');
+        alert('Você não tem permissão para acessar esta página.');
+        window.location.href = '/page/login.html';
+        return false;
+    }
+    
+    console.log('✅ Usuário autenticado:', user.userName, 'Role:', user.role);
+    return true;
+}
+
 document.addEventListener('DOMContentLoaded', function() {
+    // Verificar autenticação primeiro
+    if (!checkAuth()) {
+        return;
+    }
     // Elementos principais
     const searchInput = document.getElementById('searchInput');
     const filterByAge = document.getElementById('filterByAge');
@@ -113,8 +140,16 @@ async function loadTeachers() {
         
         const token = localStorage.getItem('token');
         if (!token) {
-            throw new Error('Token não encontrado. Faça login novamente.');
+            console.error('❌ Token não encontrado no localStorage');
+            showError('Token não encontrado. Faça login novamente.');
+            // Redirecionar para login
+            setTimeout(() => {
+                window.location.href = '/page/login.html';
+            }, 2000);
+            return;
         }
+        
+        console.log('🔐 Token encontrado, fazendo requisição para:', `${API_BASE_URL}/teachers`);
         
         const response = await fetch(`${API_BASE_URL}/teachers`, {
             method: 'GET',
@@ -124,11 +159,36 @@ async function loadTeachers() {
             }
         });
         
-        if (!response.ok) {
-            throw new Error(`Erro ${response.status}: ${response.statusText}`);
+        console.log('📡 Resposta recebida:', response.status, response.statusText);
+        
+        if (response.status === 401 || response.status === 403) {
+            // Token inválido ou sem permissão
+            const errorText = await response.text();
+            console.error('❌ Erro de autenticação:', response.status, errorText);
+            
+            // Limpar dados de autenticação
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            
+            showError('Sessão expirada ou sem permissão. Faça login novamente.');
+            
+            // Redirecionar para login após 2 segundos
+            setTimeout(() => {
+                window.location.href = '/page/login.html';
+            }, 2000);
+            return;
         }
         
-        currentTeachers = await response.json();
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.error('❌ Erro na requisição:', response.status, errorText);
+            throw new Error(`Erro ${response.status}: ${errorText || response.statusText}`);
+        }
+        
+        const data = await response.json();
+        console.log('✅ Professores carregados:', data);
+        
+        currentTeachers = data;
         
         // Processar os dados recebidos do backend
         currentTeachers = currentTeachers.map(teacher => ({
@@ -140,9 +200,11 @@ async function loadTeachers() {
         }));
         
         filterAndSortTeachers();
+        hideLoading();
         
     } catch (error) {
-        console.error('Erro ao carregar professores:', error);
+        console.error('❌ Erro ao carregar professores:', error);
+        hideLoading();
         showError('Erro ao carregar professores: ' + error.message);
     }
 }
@@ -445,8 +507,17 @@ async function deleteTeacher(teacherId) {
             }
         });
         
+        if (response.status === 401 || response.status === 403) {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            alert('Sessão expirada. Faça login novamente.');
+            window.location.href = '/page/login.html';
+            return;
+        }
+        
         if (!response.ok) {
-            throw new Error(`Erro ${response.status}: ${response.statusText}`);
+            const errorText = await response.text();
+            throw new Error(`Erro ${response.status}: ${errorText || response.statusText}`);
         }
         
         alert('Professor excluído com sucesso!');
