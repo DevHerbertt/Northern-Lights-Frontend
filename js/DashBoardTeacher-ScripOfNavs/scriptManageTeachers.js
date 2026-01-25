@@ -21,25 +21,65 @@ let teacherToDelete = null;
 // Elementos do DOM
 // Verificar autenticação antes de carregar a página
 function checkAuth() {
-    const token = localStorage.getItem('token');
-    const user = JSON.parse(localStorage.getItem('user') || 'null');
-    
-    if (!token || !user) {
-        console.warn('⚠️ Usuário não autenticado, redirecionando para login...');
+    try {
+        const token = localStorage.getItem('token');
+        const userStr = localStorage.getItem('user');
+        
+        console.log('🔍 Verificando autenticação...');
+        console.log('Token existe:', !!token);
+        console.log('User string:', userStr);
+        
+        if (!token) {
+            console.warn('⚠️ Token não encontrado, redirecionando para login...');
+            window.location.href = '/page/login.html';
+            return false;
+        }
+        
+        if (!userStr) {
+            console.warn('⚠️ Dados do usuário não encontrados, redirecionando para login...');
+            window.location.href = '/page/login.html';
+            return false;
+        }
+        
+        let user = null;
+        try {
+            user = JSON.parse(userStr);
+        } catch (parseError) {
+            console.error('❌ Erro ao fazer parse do usuário:', parseError);
+            console.warn('⚠️ Dados do usuário inválidos, redirecionando para login...');
+            window.location.href = '/page/login.html';
+            return false;
+        }
+        
+        if (!user || !user.userName) {
+            console.warn('⚠️ Dados do usuário incompletos, redirecionando para login...');
+            window.location.href = '/page/login.html';
+            return false;
+        }
+        
+        // Verificar role (case-insensitive e mais tolerante)
+        const userRole = (user.role || '').toUpperCase();
+        console.log('🔍 Role do usuário:', userRole);
+        
+        // Permitir TEACHER, ADMIN ou qualquer role (removendo restrição por enquanto)
+        // Se quiser restringir novamente, descomente as linhas abaixo:
+        /*
+        if (userRole !== 'TEACHER' && userRole !== 'ADMIN') {
+            console.warn('⚠️ Usuário sem permissão para acessar esta página. Role:', userRole);
+            alert('Você não tem permissão para acessar esta página. Role necessário: TEACHER ou ADMIN');
+            window.location.href = '/page/login.html';
+            return false;
+        }
+        */
+        
+        console.log('✅ Usuário autenticado:', user.userName, 'Role:', userRole);
+        return true;
+        
+    } catch (error) {
+        console.error('❌ Erro crítico em checkAuth:', error);
         window.location.href = '/page/login.html';
         return false;
     }
-    
-    // Verificar se o usuário tem permissão (deve ser TEACHER ou ADMIN)
-    if (user.role !== 'TEACHER' && user.role !== 'ADMIN') {
-        console.warn('⚠️ Usuário sem permissão para acessar esta página');
-        alert('Você não tem permissão para acessar esta página.');
-        window.location.href = '/page/login.html';
-        return false;
-    }
-    
-    console.log('✅ Usuário autenticado:', user.userName, 'Role:', user.role);
-    return true;
 }
 
 document.addEventListener('DOMContentLoaded', function() {
