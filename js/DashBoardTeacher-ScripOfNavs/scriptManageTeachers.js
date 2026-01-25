@@ -458,8 +458,17 @@ async function updateTeacher() {
             body: JSON.stringify(teacherData)
         });
         
+        if (response.status === 401 || response.status === 403) {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            alert('Sessão expirada. Faça login novamente.');
+            window.location.href = '/page/login.html';
+            return;
+        }
+        
         if (!response.ok) {
-            throw new Error(`Erro ${response.status}: ${response.statusText}`);
+            const errorText = await response.text();
+            throw new Error(`Erro ${response.status}: ${errorText || response.statusText}`);
         }
         
         const updatedTeacher = await response.json();
