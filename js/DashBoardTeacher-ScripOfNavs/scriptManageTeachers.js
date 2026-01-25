@@ -1,5 +1,6 @@
 // Configuração
-const API_BASE_URL = 'http://localhost:8080';
+// Usar API configurada em config.js
+const API_BASE_URL = window.API || window.API_BASE_URL || 'http://localhost:8080';
 let currentTeachers = [];
 let filteredTeachers = [];
 let currentPage = 1;

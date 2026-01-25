@@ -2,7 +2,7 @@
 (function() {
 'use strict';
 
-// Declarar API global apenas uma vez
+// Usar API configurada em config.js
 if (typeof window.API === 'undefined') {
     window.API = "http://localhost:8080";
 }

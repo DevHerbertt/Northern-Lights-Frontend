@@ -1,9 +1,8 @@
 // questions-manager.js
-// Declarar API global apenas uma vez
+// Usar API configurada em config.js
 if (typeof window.API === 'undefined') {
     window.API = "http://localhost:8080";
 }
-// Usar window.API diretamente através de uma função para evitar conflito de escopo
 const API = (function() { return window.API; })();
 let editingQuestionId = null;
 let optionCounter = 0;

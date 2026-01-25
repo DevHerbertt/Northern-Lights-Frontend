@@ -4,7 +4,7 @@
 
 // Declarar API global apenas uma vez
 if (typeof window.API === 'undefined') {
-    window.API = "http://localhost:8080"; // substitua pelo endpoint real da sua API
+    window.API = window.API || "http://localhost:8080"; // Usa config.js se disponível
 }
 // Usar window.API diretamente
 const API = window.API;

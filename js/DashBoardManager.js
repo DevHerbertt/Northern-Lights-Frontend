@@ -1,11 +1,11 @@
 (function() {
 'use strict';
 
-// Declarar API global apenas uma vez
+// Usar API configurada em config.js (carregado antes deste arquivo)
+// Se config.js não foi carregado, usa fallback
 if (typeof window.API === 'undefined') {
     window.API = "http://localhost:8080";
 }
-// Usar window.API diretamente
 const API = window.API;
   
   // Verificar token e redirecionar se necessário (será chamado após DOM estar pronto)

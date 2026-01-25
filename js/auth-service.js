@@ -1,7 +1,9 @@
 // auth-service.js
 class AuthService {
     constructor() {
-        this.BASE_URL = 'http://localhost:8080/api';
+        // Usa a URL configurada em config.js ou fallback para localhost
+        const apiBase = window.API_BASE_URL || window.API || 'http://localhost:8080';
+        this.BASE_URL = `${apiBase}/api`;
         this.token = localStorage.getItem('token');
         this.user = JSON.parse(localStorage.getItem('user') || 'null');
         this.isValidating = false;
