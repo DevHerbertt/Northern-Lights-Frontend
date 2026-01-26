@@ -212,6 +212,20 @@ const API = window.API;
       console.log("🔄 Carregando dados do dashboard...");
       console.log("🔍 DEBUG: Token existe?", !!localStorage.getItem("token"));
       console.log("🔍 DEBUG: User existe?", !!localStorage.getItem("user"));
+
+      // Descobrir role do usuário logado (para evitar chamadas proibidas que geram 403)
+      let userRole = null;
+      const userStr = localStorage.getItem("user");
+      if (userStr) {
+        try {
+          const user = JSON.parse(userStr);
+          userRole = user && user.role ? user.role : null;
+          console.log("🔍 DEBUG: Role do usuário logado:", userRole);
+        } catch (parseError) {
+          console.warn("⚠️ Não foi possível fazer parse do usuário em loadDashboardData:", parseError);
+        }
+      }
+      const isTeacher = userRole === "TEACHER";
       
       // Não verificar autenticação novamente aqui - já foi verificado antes
       // Apenas verificar se o token existe
@@ -248,7 +262,14 @@ const API = window.API;
       try {
         getAllStudents();
         getAllQuestions();
-        getAllTeacher();
+        // Chamadas de professores só devem ser feitas por usuários com role TEACHER
+        if (isTeacher) {
+          console.log("👨‍🏫 Usuário é TEACHER, carregando dados de professores...");
+          getAllTeacher();
+          getTeacherQuantity();
+        } else {
+          console.log("🙅 Usuário não é TEACHER, pulando chamadas de /teachers para evitar 403");
+        }
         getAllMeets();
         console.log("✅ Listas iniciadas");
       } catch (err) {
@@ -688,7 +709,6 @@ async function updateQuestion(questionId) {
   }
 
   // ----- ANSWERS -----
-
 
   //Create
  async function createAnswer(questionId, studentId) {
@@ -1222,34 +1242,66 @@ async function deleteMeet(meetId) {
 
   //ALLTeacher
   async function getAllTeacher() {
-  try {
-    const token = localStorage.getItem("token");
-    
-    const response = await fetch(`${API}/teachers`, {
-      headers:{
-        "Authorization":`Bearer ${token}`,
-        "Content-Type": "application/json"
+    try {
+      const token = localStorage.getItem("token");
+      const userStr = localStorage.getItem("user");
+      let userRole = null;
+
+      if (userStr) {
+        try {
+          const user = JSON.parse(userStr);
+          userRole = user && user.role ? user.role : null;
+        } catch (e) {
+          console.warn("⚠️ Não foi possível fazer parse do usuário em getAllTeacher:", e);
+        }
       }
-    });
+
+      if (userRole !== "TEACHER") {
+        console.warn("🙅 getAllTeacher chamado por usuário sem role TEACHER, pulando requisição para evitar 403");
+        return;
+      }
+
+      const response = await fetch(`${API}/teachers`, {
+        headers:{
+          "Authorization":`Bearer ${token}`,
+          "Content-Type": "application/json"
+        }
+      });
       if (!response.ok) {
-          console.error("Erro HTTP:", response.status, response.statusText);
-          return;
+        console.error("Erro HTTP em /teachers:", response.status, response.statusText);
+        return;
       }
 
-    const teachers = await response.json();
-    console.log("Lista de Professores",teachers);
+      const teachers = await response.json();
+      console.log("Lista de Professores",teachers);
 
-  } catch (error) {
+    } catch (error) {
       console.error("Erro ao buscar professores:", error);
-  }
+    }
 
-}
+  }
 
 
 //Quatity
 async function getTeacherQuantity() {
     try {
         const token = localStorage.getItem("token");
+        const userStr = localStorage.getItem("user");
+        let userRole = null;
+
+        if (userStr) {
+            try {
+                const user = JSON.parse(userStr);
+                userRole = user && user.role ? user.role : null;
+            } catch (e) {
+                console.warn("⚠️ Não foi possível fazer parse do usuário em getTeacherQuantity:", e);
+            }
+        }
+
+        if (userRole !== "TEACHER") {
+            console.warn("🙅 getTeacherQuantity chamado por usuário sem role TEACHER, pulando requisição para evitar 403");
+            return;
+        }
 
         const response = await fetch(`${API}/teachers/quantity`, {
             headers: {
@@ -1699,5 +1751,3 @@ async function getTeacherQuantity() {
   window.closeFullscreenTeacher = closeFullscreenTeacher;
 
 })(); // Fechar IIFE
-
-
