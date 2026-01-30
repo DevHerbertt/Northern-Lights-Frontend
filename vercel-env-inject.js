@@ -6,3 +6,4 @@
 // A Vercel injeta variáveis de ambiente automaticamente no build
 // Use o método de script inline no HTML ou configure via vercel.json
 
+

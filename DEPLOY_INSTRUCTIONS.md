@@ -191,3 +191,4 @@ No arquivo `SecurityConfig.java` do backend, adicione:
 - Configure CORS no backend para aceitar o domínio do Vercel
 - Verifique se está usando HTTPS em produção
 
+

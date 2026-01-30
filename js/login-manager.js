@@ -209,7 +209,7 @@ class LoginManager {
     }
 
     goBack() {
-        window.location.href = '/page/index.html';
+        window.location.href = 'https://northern-lights-frontend-2i36.vercel.app/';
     }
 }
 

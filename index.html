@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Northern Lights - Aprenda Inglês com Excelência</title>
+    <link rel="icon" type="image/x-icon" href="/img/favicon.ico">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -29,6 +30,76 @@
             --gradient-english: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
             --gradient-dark: linear-gradient(135deg, #000428 0%, #004e92 100%);
             --gradient-aurora: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+        }
+
+        /* Tema Claro */
+        [data-theme="light"] {
+            --background: #f8fafc;
+            --background-light: #ffffff;
+            --foreground: #0a0e27;
+            --muted: #64748b;
+            --card-bg: rgba(255, 255, 255, 0.9);
+            --border: #e2e8f0;
+        }
+
+        [data-theme="light"] body {
+            background: var(--background);
+            color: var(--foreground);
+        }
+
+        [data-theme="light"] .glass-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        [data-theme="light"] .hero {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
+        }
+
+        [data-theme="light"] .section-title {
+            color: var(--foreground);
+        }
+
+        [data-theme="light"] .teacher-description,
+        [data-theme="light"] .section-subtitle {
+            color: var(--muted);
+        }
+
+        [data-theme="light"] .btn-outline {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        [data-theme="light"] .btn-outline:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        [data-theme="light"] .social-icon {
+            background: rgba(0, 0, 0, 0.05);
+            border-color: rgba(0, 0, 0, 0.1);
+        }
+
+        [data-theme="light"] .social-icon:hover {
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        [data-theme="light"] .church-card,
+        [data-theme="light"] .creator-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+        }
+
+        [data-theme="light"] footer {
+            border-top-color: var(--border);
+        }
+
+        [data-theme="light"] .intro-title {
+            background: var(--gradient-aurora);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         * {
@@ -252,7 +323,82 @@
             display: flex;
             gap: 15px;
             justify-content: flex-end;
+            align-items: center;
             flex-wrap: wrap;
+        }
+
+        /* Toggle de Tema */
+        .theme-toggle {
+            position: relative;
+            width: 60px;
+            height: 30px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            padding: 3px;
+            margin-right: 15px;
+        }
+
+        .theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .theme-toggle-slider {
+            width: 24px;
+            height: 24px;
+            background: var(--gradient-primary);
+            border-radius: 50%;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.7rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        [data-theme="light"] .theme-toggle {
+            background: rgba(0, 0, 0, 0.1);
+            border-color: rgba(0, 0, 0, 0.2);
+        }
+
+        [data-theme="light"] .theme-toggle:hover {
+            background: rgba(0, 0, 0, 0.15);
+        }
+
+        [data-theme="light"] .theme-toggle-slider {
+            transform: translateX(30px);
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+        }
+
+        .theme-toggle-icon {
+            position: absolute;
+            left: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.8rem;
+            color: var(--muted);
+            transition: all 0.3s ease;
+            pointer-events: none;
+        }
+
+        [data-theme="light"] .theme-toggle-icon {
+            opacity: 0;
+        }
+
+        .theme-toggle-icon.sun {
+            right: 8px;
+            left: auto;
+            opacity: 0;
+        }
+
+        [data-theme="light"] .theme-toggle-icon.sun {
+            opacity: 1;
         }
 
         /* Hero Section */
@@ -879,6 +1025,13 @@
             <!-- Header com botões de autenticação -->
             <header>
                 <div class="auth-buttons">
+                    <button class="theme-toggle" id="theme-toggle" title="Alternar tema">
+                        <i class="fas fa-moon theme-toggle-icon"></i>
+                        <i class="fas fa-sun theme-toggle-icon sun"></i>
+                        <span class="theme-toggle-slider">
+                            <i class="fas fa-moon"></i>
+                        </span>
+                    </button>
                     <a href="/page/login.html" class="btn btn-outline">
                         <i class="fas fa-sign-in-alt"></i> Entrar
                     </a>
@@ -1000,14 +1153,8 @@
                                 Evellyn é uma professora de inglês apaixonada, dedicada a ajudar alunos iniciantes e intermediários a construir uma base sólida e confiança no idioma. Com metodologia dinâmica e acolhedora, ela torna o aprendizado acessível e prazeroso.
                             </p>
                             <div class="teacher-social">
-                                <a href="#" class="social-icon" title="Facebook">
-                                    <i class="fab fa-facebook-f"></i>
-                                </a>
-                                <a href="#" class="social-icon" title="Instagram">
+                                <a href="https://www.instagram.com/limaevelyn/" target="_blank" class="social-icon" title="Instagram">
                                     <i class="fab fa-instagram"></i>
-                                </a>
-                                <a href="#" class="social-icon" title="LinkedIn">
-                                    <i class="fab fa-linkedin-in"></i>
                                 </a>
                             </div>
                         </div>
@@ -1024,13 +1171,10 @@
                                 Vinícius é um professor de inglês dedicado que traz paixão e expertise para ajudar alunos avançados a dominar o idioma e alcançar seu maior potencial. Com experiência internacional, ele oferece uma perspectiva única e enriquecedora.
                             </p>
                             <div class="teacher-social">
-                                <a href="#" class="social-icon" title="Facebook">
-                                    <i class="fab fa-facebook-f"></i>
-                                </a>
-                                <a href="#" class="social-icon" title="Instagram">
+                                <a href="https://www.instagram.com/vinimartinson/" target="_blank" class="social-icon" title="Instagram">
                                     <i class="fab fa-instagram"></i>
                                 </a>
-                                <a href="#" class="social-icon" title="LinkedIn">
+                                <a href="https://www.linkedin.com/in/vinicius-martinson/" target="_blank" class="social-icon" title="LinkedIn">
                                     <i class="fab fa-linkedin-in"></i>
                                 </a>
                             </div>
@@ -1116,10 +1260,7 @@
                         <p class="creator-role">Desenvolvedor Full-Stack</p>
                         
                         <div class="creator-social">
-                            <a href="https://www.instagram.com/herbertt.mat/" target="_blank" style="background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);" title="Instagram">
-                                <i class="fab fa-instagram"></i>
-                            </a>
-                            <a href="https://www.linkedin.com/in/herbertmatheus/" target="_blank" style="background: #0a66c2;" title="LinkedIn">
+                            <a href="https://www.linkedin.com/in/herbert-matheus-o-s-081061307/" target="_blank" style="background: #0a66c2;" title="LinkedIn">
                                 <i class="fab fa-linkedin-in"></i>
                             </a>
                         </div>
@@ -1204,6 +1345,32 @@
                 }
             });
         });
+
+        // Sistema de Tema Claro/Escuro
+        const themeToggle = document.getElementById('theme-toggle');
+        const html = document.documentElement;
+
+        // Carregar tema salvo do localStorage
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            html.setAttribute('data-theme', savedTheme);
+        }
+
+        // Alternar tema
+        function toggleTheme() {
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        }
+
+        // Inicializar tema ao carregar
+        loadTheme();
+
+        // Event listener para o botão de toggle
+        if (themeToggle) {
+            themeToggle.addEventListener('click', toggleTheme);
+        }
     </script>
 </body>
 </html>

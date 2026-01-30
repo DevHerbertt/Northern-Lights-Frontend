@@ -293,6 +293,12 @@ body {
     transition: all 0.3s ease;
 }
 
+.form-input option {
+    background-color: #0f172a;
+    color: white;
+    padding: 10px;
+}
+
 .form-input::placeholder {
     color: rgba(255, 255, 255, 0.4);
 }
@@ -307,6 +313,19 @@ body {
 .form-select {
     appearance: none;
     cursor: pointer;
+    color: white !important;
+    background-color: rgba(255, 255, 255, 0.05) !important;
+}
+
+.form-select option {
+    background-color: rgba(15, 23, 42, 0.95) !important;
+    color: white !important;
+    padding: 10px;
+}
+
+.form-select:focus {
+    color: white !important;
+    background-color: rgba(255, 255, 255, 0.08) !important;
 }
 
 .input-icon {
