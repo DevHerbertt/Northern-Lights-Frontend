@@ -34,12 +34,12 @@
 
         /* Tema Claro */
         [data-theme="light"] {
-            --background: #f8fafc;
-            --background-light: #ffffff;
-            --foreground: #0a0e27;
+            --background: #f1f5f9;
+            --background-light: #f8fafc;
+            --foreground: #1e293b;
             --muted: #64748b;
-            --card-bg: rgba(255, 255, 255, 0.9);
-            --border: #e2e8f0;
+            --card-bg: rgba(248, 250, 252, 0.95);
+            --border: #cbd5e1;
         }
 
         [data-theme="light"] body {
@@ -50,11 +50,12 @@
         [data-theme="light"] .glass-card {
             background: var(--card-bg);
             border: 1px solid var(--border);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            backdrop-filter: blur(10px);
         }
 
         [data-theme="light"] .hero {
-            background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.08) 0%, rgba(118, 75, 162, 0.08) 100%);
         }
 
         [data-theme="light"] .section-title {
@@ -77,18 +78,21 @@
         }
 
         [data-theme="light"] .social-icon {
-            background: rgba(0, 0, 0, 0.05);
-            border-color: rgba(0, 0, 0, 0.1);
+            background: rgba(241, 245, 249, 0.8);
+            border-color: rgba(203, 213, 225, 0.5);
+            color: var(--foreground);
         }
 
         [data-theme="light"] .social-icon:hover {
-            background: rgba(0, 0, 0, 0.1);
+            background: rgba(226, 232, 240, 0.9);
+            border-color: var(--border);
         }
 
         [data-theme="light"] .church-card,
         [data-theme="light"] .creator-card {
             background: var(--card-bg);
             border: 1px solid var(--border);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
         }
 
         [data-theme="light"] footer {
