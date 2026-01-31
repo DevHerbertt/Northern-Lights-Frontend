@@ -798,31 +798,6 @@
         /* ============================================
            CREATOR SECTION
            ============================================ */
-        .creator {
-            text-align: center;
-        }
-
-        .creator-toggle {
-            background: none;
-            border: 2px solid var(--border-color);
-            color: var(--text-secondary);
-            font-size: 1.1rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-bottom: 40px;
-            padding: 12px 24px;
-            border-radius: 50px;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .creator-toggle:hover {
-            color: var(--text-primary);
-            background: var(--card-bg);
-            border-color: var(--primary);
-        }
-
         .creator-card {
             max-width: 500px;
             margin: 0 auto;
@@ -835,12 +810,7 @@
             font-size: 2rem;
             font-weight: 700;
             margin-bottom: 8px;
-            background: var(--gradient-aurora);
-            background-size: 200% 200%;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            animation: aurora 8s ease infinite;
+            color: var(--text-primary);
         }
 
         .creator-role {
@@ -857,22 +827,21 @@
         }
 
         .creator-social a {
-            width: 56px;
-            height: 56px;
-            border-radius: 16px;
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
             text-decoration: none;
             transition: all 0.3s ease;
-            font-size: 1.5rem;
-            box-shadow: var(--shadow-md);
+            font-size: 1.3rem;
         }
 
         .creator-social a:hover {
-            transform: scale(1.15) translateY(-3px);
-            box-shadow: var(--shadow-lg);
+            transform: translateY(-2px);
+            opacity: 0.9;
         }
 
         .creator-note {
@@ -881,19 +850,80 @@
             font-style: italic;
         }
 
+        .creator-toggle {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            padding: 8px 16px;
+            border-radius: 8px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .creator-toggle:hover {
+            color: var(--text-primary);
+            border-color: var(--primary);
+            background: var(--card-hover);
+        }
+
+        .creator-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1999;
+            display: none;
+        }
+
+        #creator-info {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 2000;
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
         /* ============================================
            FOOTER
            ============================================ */
         footer {
-            padding: 80px 0;
+            padding: 60px 0;
             border-top: 1px solid var(--border-color);
-            text-align: center;
             margin-top: 100px;
+            position: relative;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .footer-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .footer-center {
+            flex: 1;
+            text-align: center;
         }
 
         .footer-logo {
-            margin-bottom: 24px;
-            font-size: 3rem;
+            font-size: 2.5rem;
             background: var(--gradient-aurora);
             background-size: 200% 200%;
             -webkit-background-clip: text;
@@ -969,6 +999,15 @@
 
             .header-actions {
                 width: 100%;
+                justify-content: center;
+            }
+
+            .footer-content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .footer-left {
                 justify-content: center;
             }
         }
@@ -1233,19 +1272,35 @@
                 </div>
             </section>
 
-            <!-- Creator Section -->
-            <section class="section creator">
-                <button class="creator-toggle" id="creator-toggle">
-                    <i class="fas fa-user-circle"></i> Sobre o Desenvolvedor
-                </button>
+            <!-- Footer -->
+            <footer>
+                <div class="footer-content">
+                    <div class="footer-left">
+                        <button class="creator-toggle" id="creator-toggle">
+                            <i class="fas fa-user-circle"></i> Desenvolvedor
+                        </button>
+                    </div>
+                    <div class="footer-center">
+                        <div class="footer-logo">
+                            <i class="fas fa-mountain"></i>
+                        </div>
+                        <p class="footer-text">
+                            Powered by the magic of the Northern Lights • Sistema Educacional Aurora 2024
+                        </p>
+                    </div>
+                </div>
                 
+                <div class="creator-overlay" id="creator-overlay"></div>
                 <div id="creator-info" style="display: none;">
                     <div class="card creator-card">
+                        <button style="position: absolute; top: 16px; right: 16px; background: none; border: none; color: var(--text-secondary); font-size: 1.5rem; cursor: pointer; z-index: 1; transition: color 0.3s ease;" onmouseover="this.style.color='var(--text-primary)'" onmouseout="this.style.color='var(--text-secondary)'" onclick="closeCreatorModal()">
+                            <i class="fas fa-times"></i>
+                        </button>
                         <h3 class="creator-name">Herbert Matheus Oliveira Santos</h3>
                         <p class="creator-role">Desenvolvedor Full-Stack</p>
                         
                         <div class="creator-social">
-                            <a href="https://www.instagram.com/herbertt.mat/" target="_blank" style="background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);" title="Instagram">
+                            <a href="https://www.instagram.com/herbertt.mat/" target="_blank" style="background: #E4405F;" title="Instagram">
                                 <i class="fab fa-instagram"></i>
                             </a>
                             <a href="https://www.linkedin.com/in/herbert-matheus-o-s-081061307/" target="_blank" style="background: #0a66c2;" title="LinkedIn">
@@ -1258,16 +1313,6 @@
                         </p>
                     </div>
                 </div>
-            </section>
-
-            <!-- Footer -->
-            <footer>
-                <div class="footer-logo">
-                    <i class="fas fa-mountain"></i>
-                </div>
-                <p class="footer-text">
-                    Powered by the magic of the Northern Lights • Sistema Educacional Aurora 2024
-                </p>
             </footer>
         </div>
     </div>
@@ -1312,15 +1357,39 @@
         // Event Listeners
         introAnimation.addEventListener('click', finishIntro);
 
-        creatorToggle.addEventListener('click', function() {
-            if (creatorInfo.style.display === 'none') {
+        function openCreatorModal() {
+            const creatorInfo = document.getElementById('creator-info');
+            const creatorOverlay = document.getElementById('creator-overlay');
+            if (creatorInfo && creatorOverlay) {
                 creatorInfo.style.display = 'block';
-                creatorToggle.innerHTML = '<i class="fas fa-times-circle"></i> Ocultar Informações';
-            } else {
+                creatorOverlay.style.display = 'block';
+            }
+        }
+
+        function closeCreatorModal() {
+            const creatorInfo = document.getElementById('creator-info');
+            const creatorOverlay = document.getElementById('creator-overlay');
+            if (creatorInfo && creatorOverlay) {
                 creatorInfo.style.display = 'none';
-                creatorToggle.innerHTML = '<i class="fas fa-user-circle"></i> Sobre o Desenvolvedor';
+                creatorOverlay.style.display = 'none';
+            }
+        }
+
+        creatorToggle.addEventListener('click', function(e) {
+            e.stopPropagation();
+            const creatorInfo = document.getElementById('creator-info');
+            if (creatorInfo && (creatorInfo.style.display === 'none' || creatorInfo.style.display === '')) {
+                openCreatorModal();
+            } else {
+                closeCreatorModal();
             }
         });
+
+        // Fechar modal ao clicar no overlay
+        const creatorOverlay = document.getElementById('creator-overlay');
+        if (creatorOverlay) {
+            creatorOverlay.addEventListener('click', closeCreatorModal);
+        }
 
         // Smooth scroll para links internos
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
