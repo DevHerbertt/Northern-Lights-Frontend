@@ -181,13 +181,13 @@ async function loadRecordedClasses() {
                                 <!-- Data de criação no centro - Design Premium -->
                                 <div style="position: relative; z-index: 1; text-align: center; color: white; padding: 20px;">
                                     <!-- Dia em destaque -->
-                                    <div style="font-size: 5rem; font-weight: 800; line-height: 1; margin-bottom: 4px; text-shadow: 0 4px 20px rgba(0, 0, 0, 0.4), 0 2px 8px rgba(0, 0, 0, 0.3); letter-spacing: -2px; background: linear-gradient(180deg, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0.9) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));">${day}</div>
+                                    <div style="font-size: 5rem; font-weight: 800; line-height: 1; margin-bottom: 4px; text-shadow: 0 4px 25px rgba(0, 0, 0, 0.6), 0 2px 10px rgba(0, 0, 0, 0.5), 0 0 30px rgba(255, 255, 255, 0.2); letter-spacing: -2px; color: #ffffff;">${day}</div>
                                     
                                     <!-- Mês e ano elegantes -->
                                     <div style="display: flex; align-items: center; justify-content: center; gap: 12px; margin-top: 8px;">
-                                        <div style="font-size: 1.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; text-shadow: 0 2px 12px rgba(0, 0, 0, 0.5), 0 1px 4px rgba(0, 0, 0, 0.4); opacity: 0.98;">${monthName}</div>
-                                        <div style="width: 3px; height: 3px; background: rgba(255, 255, 255, 0.6); border-radius: 50%;"></div>
-                                        <div style="font-size: 1.4rem; font-weight: 600; text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5), 0 1px 4px rgba(0, 0, 0, 0.4); opacity: 0.95;">${year}</div>
+                                        <div style="font-size: 1.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; text-shadow: 0 2px 15px rgba(0, 0, 0, 0.6), 0 1px 6px rgba(0, 0, 0, 0.5); color: #ffffff;">${monthName}</div>
+                                        <div style="width: 4px; height: 4px; background: rgba(255, 255, 255, 0.8); border-radius: 50%; box-shadow: 0 0 8px rgba(255, 255, 255, 0.5);"></div>
+                                        <div style="font-size: 1.4rem; font-weight: 600; text-shadow: 0 2px 12px rgba(0, 0, 0, 0.6), 0 1px 5px rgba(0, 0, 0, 0.5); color: #ffffff;">${year}</div>
                                     </div>
                                 </div>
                                 
