@@ -8,6 +8,33 @@ if (typeof window.API === 'undefined') {
 }
 const API = (function() { return window.API; })();
 
+// Função para gerar gradiente variado baseado no ID
+function generateGradient(id) {
+    // Paleta de gradientes bonitos e variados
+    const gradients = [
+        'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+        'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+        'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
+        'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)',
+        'linear-gradient(135deg, #fa709a 0%, #fee140 100%)',
+        'linear-gradient(135deg, #30cfd0 0%, #330867 100%)',
+        'linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)',
+        'linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%)',
+        'linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%)',
+        'linear-gradient(135deg, #ff6e7f 0%, #bfe9ff 100%)',
+        'linear-gradient(135deg, #c471ed 0%, #f64f59 100%)',
+        'linear-gradient(135deg, #12c2e9 0%, #c471ed 50%, #f64f59 100%)',
+        'linear-gradient(135deg, #fad961 0%, #f76b1c 100%)',
+        'linear-gradient(135deg, #5ee7df 0%, #b490ca 100%)',
+        'linear-gradient(135deg, #d299c2 0%, #fef9d7 100%)',
+        'linear-gradient(135deg, #89f7fe 0%, #66a6ff 100%)'
+    ];
+    
+    // Usar o ID para selecionar um gradiente de forma consistente
+    const index = id % gradients.length;
+    return gradients[index];
+}
+
 // Carregar dados ao iniciar
 document.addEventListener('DOMContentLoaded', async () => {
     await loadClassrooms();
@@ -383,17 +410,31 @@ async function loadStudentRecordedClasses() {
             
             // Extrair ID do vídeo do YouTube se for URL do YouTube
             let videoEmbedUrl = recordedClass.videoUrl;
+            let isYouTube = false;
             if (recordedClass.videoUrl && recordedClass.videoUrl.includes('youtube.com/watch?v=')) {
                 const videoId = recordedClass.videoUrl.split('v=')[1]?.split('&')[0];
                 if (videoId) {
                     videoEmbedUrl = `https://www.youtube.com/embed/${videoId}`;
+                    isYouTube = true;
                 }
             } else if (recordedClass.videoUrl && recordedClass.videoUrl.includes('youtu.be/')) {
                 const videoId = recordedClass.videoUrl.split('youtu.be/')[1]?.split('?')[0];
                 if (videoId) {
                     videoEmbedUrl = `https://www.youtube.com/embed/${videoId}`;
+                    isYouTube = true;
                 }
             }
+            
+            // Gerar gradiente único para esta aula
+            const thumbnailGradient = generateGradient(recordedClass.id);
+            
+            // Formatar data para exibição no thumbnail
+            const dateParts = formattedDate.split('/');
+            const day = dateParts[0];
+            const month = dateParts[1];
+            const year = dateParts[2];
+            const monthNames = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
+            const monthName = monthNames[parseInt(month) - 1];
             
             return `
                 <div class="recorded-class-card" style="background: rgba(15, 23, 42, 0.8); border-radius: 12px; padding: 20px; border: 2px solid rgba(255, 255, 255, 0.1); transition: all 0.3s ease;">
@@ -408,8 +449,8 @@ async function loadStudentRecordedClasses() {
                         <p style="color: #cbd5e1; margin: 15px 0; line-height: 1.6;">${escapeHtml(recordedClass.description)}</p>
                     ` : ''}
                     
-                    <div style="margin: 15px 0; border-radius: 8px; overflow: hidden; background: #000; aspect-ratio: 16/9;">
-                        ${videoEmbedUrl.includes('youtube.com/embed') ? `
+                    <div style="margin: 15px 0; border-radius: 8px; overflow: hidden; background: #000; aspect-ratio: 16/9; position: relative; cursor: ${isYouTube ? 'default' : 'pointer'};" ${!isYouTube ? `onclick="window.open('${escapeHtml(recordedClass.videoUrl)}', '_blank')"` : ''}>
+                        ${isYouTube ? `
                             <iframe 
                                 width="100%" 
                                 height="100%" 
@@ -420,10 +461,28 @@ async function loadStudentRecordedClasses() {
                                 style="border: none;"
                             ></iframe>
                         ` : `
-                            <div style="display: flex; align-items: center; justify-content: center; height: 100%; color: #94a3b8;">
-                                <a href="${escapeHtml(recordedClass.videoUrl)}" target="_blank" style="color: #3b82f6; text-decoration: none; font-weight: 600;">
-                                    <i class="fas fa-external-link-alt"></i> Abrir vídeo
-                                </a>
+                            <!-- Thumbnail com gradiente e data -->
+                            <div style="width: 100%; height: 100%; background: ${thumbnailGradient}; position: relative; display: flex; align-items: center; justify-content: center; transition: transform 0.3s ease;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                                <!-- Overlay escuro sutil para melhorar legibilidade -->
+                                <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.2);"></div>
+                                
+                                <!-- Data de criação no centro -->
+                                <div style="position: relative; z-index: 1; text-align: center; color: white; text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);">
+                                    <div style="font-size: 3.5rem; font-weight: 700; line-height: 1; margin-bottom: 8px; opacity: 0.95;">${day}</div>
+                                    <div style="font-size: 1.5rem; font-weight: 600; margin-bottom: 4px; opacity: 0.9;">${monthName}</div>
+                                    <div style="font-size: 1.2rem; font-weight: 500; opacity: 0.85;">${year}</div>
+                                </div>
+                                
+                                <!-- Ícone de play no canto -->
+                                <div style="position: absolute; bottom: 20px; right: 20px; background: rgba(255, 255, 255, 0.9); border-radius: 50%; width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); z-index: 2;">
+                                    <i class="fas fa-play" style="color: #1f2937; font-size: 1.5rem; margin-left: 4px;"></i>
+                                </div>
+                                
+                                <!-- Badge Google Meet no canto superior -->
+                                <div style="position: absolute; top: 15px; left: 15px; background: rgba(255, 255, 255, 0.95); border-radius: 8px; padding: 8px 12px; display: flex; align-items: center; gap: 6px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2); z-index: 2;">
+                                    <i class="fab fa-google" style="color: #4285f4; font-size: 1.1rem;"></i>
+                                    <span style="color: #1f2937; font-weight: 600; font-size: 0.85rem;">Meet</span>
+                                </div>
                             </div>
                         `}
                     </div>
