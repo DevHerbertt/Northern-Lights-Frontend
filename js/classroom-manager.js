@@ -912,28 +912,43 @@ async function loadRecordedClasses() {
                                 style="border: none; display: block;"
                             ></iframe>
                         ` : `
-                            <!-- Thumbnail com gradiente e data -->
-                            <div style="width: 100%; height: 100%; background: ${thumbnailGradient}; position: relative; display: flex; align-items: center; justify-content: center; transition: transform 0.3s ease;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
-                                <!-- Overlay escuro sutil para melhorar legibilidade -->
-                                <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.2);"></div>
+                            <!-- Thumbnail com gradiente e data - Design Premium -->
+                            <div style="width: 100%; height: 100%; background: ${thumbnailGradient}; position: relative; display: flex; align-items: center; justify-content: center; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); overflow: hidden;" onmouseover="this.style.transform='scale(1.03)'; this.style.filter='brightness(1.1)'" onmouseout="this.style.transform='scale(1)'; this.style.filter='brightness(1)'">
+                                <!-- Padrão de pontos decorativo -->
+                                <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-image: radial-gradient(circle, rgba(255, 255, 255, 0.1) 1px, transparent 1px); background-size: 30px 30px; opacity: 0.3;"></div>
                                 
-                                <!-- Data de criação no centro -->
-                                <div style="position: relative; z-index: 1; text-align: center; color: white; text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);">
-                                    <div style="font-size: 3.5rem; font-weight: 700; line-height: 1; margin-bottom: 8px; opacity: 0.95;">${day}</div>
-                                    <div style="font-size: 1.5rem; font-weight: 600; margin-bottom: 4px; opacity: 0.9;">${monthName}</div>
-                                    <div style="font-size: 1.2rem; font-weight: 500; opacity: 0.85;">${year}</div>
+                                <!-- Overlay com gradiente radial para profundidade -->
+                                <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle at center, transparent 0%, rgba(0, 0, 0, 0.3) 100%);"></div>
+                                
+                                <!-- Brilho sutil no canto -->
+                                <div style="position: absolute; top: -50%; right: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(255, 255, 255, 0.15) 0%, transparent 70%); opacity: 0.6;"></div>
+                                
+                                <!-- Data de criação no centro - Design Premium -->
+                                <div style="position: relative; z-index: 1; text-align: center; color: white; padding: 20px;">
+                                    <!-- Dia em destaque -->
+                                    <div style="font-size: 5rem; font-weight: 800; line-height: 1; margin-bottom: 4px; text-shadow: 0 4px 20px rgba(0, 0, 0, 0.4), 0 2px 8px rgba(0, 0, 0, 0.3); letter-spacing: -2px; background: linear-gradient(180deg, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0.9) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));">${day}</div>
+                                    
+                                    <!-- Mês e ano elegantes -->
+                                    <div style="display: flex; align-items: center; justify-content: center; gap: 12px; margin-top: 8px;">
+                                        <div style="font-size: 1.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; text-shadow: 0 2px 12px rgba(0, 0, 0, 0.5), 0 1px 4px rgba(0, 0, 0, 0.4); opacity: 0.98;">${monthName}</div>
+                                        <div style="width: 3px; height: 3px; background: rgba(255, 255, 255, 0.6); border-radius: 50%;"></div>
+                                        <div style="font-size: 1.4rem; font-weight: 600; text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5), 0 1px 4px rgba(0, 0, 0, 0.4); opacity: 0.95;">${year}</div>
+                                    </div>
                                 </div>
                                 
-                                <!-- Ícone de play no canto -->
-                                <div style="position: absolute; bottom: 20px; right: 20px; background: rgba(255, 255, 255, 0.9); border-radius: 50%; width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); z-index: 2;">
-                                    <i class="fas fa-play" style="color: #1f2937; font-size: 1.5rem; margin-left: 4px;"></i>
+                                <!-- Ícone de play premium no canto -->
+                                <div style="position: absolute; bottom: 24px; right: 24px; background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.85) 100%); backdrop-filter: blur(10px); border-radius: 50%; width: 70px; height: 70px; display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4), 0 4px 12px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.5); z-index: 2; transition: all 0.3s ease; border: 2px solid rgba(255, 255, 255, 0.3);" onmouseover="this.style.transform='scale(1.15)'; this.style.boxShadow='0 12px 35px rgba(0, 0, 0, 0.5), 0 6px 18px rgba(0, 0, 0, 0.4)'" onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 8px 25px rgba(0, 0, 0, 0.4), 0 4px 12px rgba(0, 0, 0, 0.3)'">
+                                    <i class="fas fa-play" style="color: #1f2937; font-size: 1.8rem; margin-left: 5px; filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2));"></i>
                                 </div>
                                 
-                                <!-- Badge Google Meet no canto superior -->
-                                <div style="position: absolute; top: 15px; left: 15px; background: rgba(255, 255, 255, 0.95); border-radius: 8px; padding: 8px 12px; display: flex; align-items: center; gap: 6px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2); z-index: 2;">
-                                    <i class="fab fa-google" style="color: #4285f4; font-size: 1.1rem;"></i>
-                                    <span style="color: #1f2937; font-weight: 600; font-size: 0.85rem;">Meet</span>
+                                <!-- Badge Google Meet premium no canto superior -->
+                                <div style="position: absolute; top: 20px; left: 20px; background: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(255, 255, 255, 0.92) 100%); backdrop-filter: blur(12px); border-radius: 12px; padding: 10px 16px; display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3), 0 2px 8px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.6); z-index: 2; border: 1px solid rgba(255, 255, 255, 0.4); transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 25px rgba(0, 0, 0, 0.4), 0 3px 12px rgba(0, 0, 0, 0.3)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 20px rgba(0, 0, 0, 0.3), 0 2px 8px rgba(0, 0, 0, 0.2)'">
+                                    <i class="fab fa-google" style="color: #4285f4; font-size: 1.3rem; filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));"></i>
+                                    <span style="color: #1f2937; font-weight: 700; font-size: 0.9rem; letter-spacing: 0.5px; text-shadow: 0 1px 2px rgba(255, 255, 255, 0.5);">Meet</span>
                                 </div>
+                                
+                                <!-- Borda brilhante sutil -->
+                                <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 1px solid rgba(255, 255, 255, 0.15); pointer-events: none; border-radius: inherit;"></div>
                             </div>
                         `}
                     </div>
